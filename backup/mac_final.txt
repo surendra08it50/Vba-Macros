@@ -1,0 +1,73 @@
+Sub weight_match()
+
+    Dim workbookname, workbookname2, workbookname3, text_1 As String
+    Dim wkb, wb1, wb2, wb3 As Workbook
+    Dim shname, sh, sh2, sh3, sh4, sh5, sh6 As Worksheet
+    Dim lCol, lRow, firstblank1, sheet_number, counter, uni_number, precode_number, precode_number2, precode_number3 As Integer
+    Dim mypath As String
+    mypath = ActiveWorkbook.Path
+    
+    Set sh = Application.ThisWorkbook.Worksheets("Sheet1")
+
+    workbookname = Application.ThisWorkbook.Worksheets("Sheet1").Range("F3").Value  ''''different report file name, excel workbook
+    workbookname1 = workbookname & ".xlsx"
+        
+    Set wb1 = Workbooks.Open(mypath & "\" & workbookname1)
+    
+    Set sh2 = Application.Workbooks(workbookname1).Worksheets("From Project Charter")
+    Set sh4 = Application.Workbooks(workbookname1).Worksheets("From R")
+    Set sh5 = Application.Workbooks(workbookname1).Worksheets("MFOSCODE")
+    
+    uni_number = sh2.Range("A2").End(xlDown).Row - 1   '''find the first blank cell in macro file sheet1
+        
+    precode_number = 2
+    precode_number2 = 0
+    
+    lCol = sh2.Cells(1, Columns.Count).End(xlToLeft).Column
+    
+    For i = 2 To lCol
+                   
+        sh2.Range("A1").AutoFilter Field:=i, Criteria1:=">=0"
+        sh2.Range(sh2.Cells(2, 1), sh2.Cells(uni_number + 1, 1)).SpecialCells(xlCellTypeVisible).Copy
+        sh4.Cells(precode_number + precode_number2, 5).PasteSpecial Paste:=xlPasteValues '''paste precode
+
+        Application.CutCopyMode = False
+        sh2.AutoFilterMode = False
+        
+        sh2.Range("A1").AutoFilter Field:=i, Criteria1:=">=0"
+        sh2.Range(sh2.Cells(2, i), sh2.Cells(uni_number + 1, i)).SpecialCells(xlCellTypeVisible).Copy
+        sh4.Cells(precode_number + precode_number2, 7).PasteSpecial Paste:=xlPasteValues   '''''paste Target value
+
+        Application.CutCopyMode = False
+        sh2.AutoFilterMode = False
+        
+        wb1.Save
+        
+        precode_number3 = precode_number2
+        precode_number2 = sh4.Range("E2").End(xlDown).Row - 1 '''find the first blank cell in macro file sheet1
+        
+        sh4.Range(Cells(precode_number3 + 2, 6), Cells(precode_number2 + 2, 6)).Value = sh5.Cells(i, 1)
+                        
+        Application.DisplayAlerts = False
+        
+      Debug.Print precode_number3 + 2 & " :::" & precode_number2 + 2
+      
+      Debug.Print lCol
+       
+    Next
+       
+            sh4.Range("H2").Formula = "=(E2=A2)"
+            sh4.Range("I2").Formula = "=(F2=B2)"
+            sh4.Range("J2").Formula = "=(G2=C2)"
+            sh4.Range("H2:J2").Copy
+            sh4.Range("H3:H" & precode_number2 + 1).PasteSpecial
+            
+            sh4.Range("H1").Formula = "=COUNTIF(H2:H6000,""FALSE"")"
+          
+    wb1.Save
+    
+'''''''''''''
+    Set objAD = CreateObject("ADSystemInfo")
+    Set objUser = GetObject("LDAP://" & objAD.UserName)
+    MsgBox "Thanks! " & objUser.DisplayName
+End Sub

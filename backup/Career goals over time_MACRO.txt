@@ -1,0 +1,68 @@
+
+Sub Career_goals()
+
+Dim sh, sh2, sh3 As Worksheet
+Dim sheetname, workbookname As String
+Dim counter, counter2, k, mfs_no, start_year, lcol, lrow As Integer
+
+Dim rang_mfos As Range
+
+    Set sh = Application.ThisWorkbook.Worksheets("output")
+    Set sh3 = Application.ThisWorkbook.Worksheets("2019")
+    start_year = sh.Range("A1").Value
+
+    
+counter = 6
+'''For k = 2019 To 2008 Step -1
+'''For k = 2019 To start_year Step -1
+For k = start_year To 2019
+    Set sh2 = Application.ThisWorkbook.Worksheets(CStr(k))
+    lcol = sh2.Cells(6, Columns.Count).End(xlToLeft).Column
+    Set rang_mfos = sh2.Range(sh2.Cells(7, 2), sh2.Cells(15, lcol))
+    
+    
+
+ '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+ counter2 = 0
+ For m = 4 To lcol  '''loop over MFOS
+    sh.Cells(counter2 + 6, 5).Value = sh2.Cells(6, m).Value
+    
+    
+   sh2.Range(rang_mfos.Address).Sort Key1:=sh2.Cells(6, m), Order1:=xlAscending, Header:=xlNo  ''''sort over particular year
+   
+    If (k = 2019) Then
+        sh2.Range("B7:B15").Copy
+        sh.Range("B7").PasteSpecial Paste:=xlPasteValues
+    Else
+        sh3.Range(rang_mfos.Address).Sort Key1:=sh3.Cells(6, m), Order1:=xlAscending, Header:=xlNo  ''''sort 2019 data
+        sh3.Range("B7:B15").Copy
+        sh.Range("B7").PasteSpecial Paste:=xlPasteValues
+    End If
+    
+    For f = 7 To 15   '''loop over particular year sheet
+        For b = 7 To 15   '''loop over output sheet
+                If sh2.Cells(f, 2).Value = sh.Cells(b, 2).Value Then
+
+                    sh.Cells(f + counter2, counter).Interior.Color = sh.Cells(b, 2).Interior.Color
+                    sh.Cells(counter2 + 6, counter).Value = k
+
+                End If
+        Next
+
+    Next
+    
+    counter2 = counter2 + 10
+    
+ Next
+    
+'''''''''''''''''''''''''''''''''''''''
+    counter = counter + 1
+    
+Next
+
+sh.Activate
+
+End Sub
+
+
+

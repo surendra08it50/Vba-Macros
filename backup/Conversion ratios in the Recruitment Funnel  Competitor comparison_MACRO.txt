@@ -1,0 +1,60 @@
+
+Sub conversion()
+
+ Dim sh As Worksheet
+    Set sh = ThisWorkbook.Sheets("Sheet1")
+    Set sh2 = ThisWorkbook.Sheets("Sheet2")
+ Dim m As Long
+     Dim k, i, j, counter As Long
+
+    k = sh.Range("B7", sh.Range("B7").End(xlDown)).Rows.Count
+
+
+''''''''''''1 st''''''''''''
+For j = 7 To 12
+counter = 0
+
+For m = 7 To k - 1
+ If sh.Range("B" & m).Value = Cells(j, 17).Value Then
+        counter = counter + 1
+        If (counter = 1) Then
+           For x = 3 To 14
+            sh2.Cells(j, x).Value = Cells(m, x).Value
+           Next
+        End If
+        If (counter = 2) Then
+           For x = 3 To 14
+            sh2.Cells(j + 7, x).Value = Cells(m, x).Value
+           Next
+        End If
+        If (counter = 3) Then
+           For x = 3 To 14
+            sh2.Cells(j + 14, x).Value = Cells(m, x).Value
+           Next
+        End If
+        If (counter = 4) Then
+           For x = 3 To 14
+            sh2.Cells(j + 21, x).Value = Cells(m, x).Value
+           Next
+        End If
+ End If
+   
+Next
+
+Next
+
+sh.Range("Q7:Q12").Copy
+sh2.Range("B7").PasteSpecial Paste:=xlPasteValues
+sh2.Range("B14").PasteSpecial Paste:=xlPasteValues
+sh2.Range("B21").PasteSpecial Paste:=xlPasteValues
+sh2.Range("B28").PasteSpecial Paste:=xlPasteValues
+
+sh.Range("C6:P6").Copy
+sh2.Range("C6").PasteSpecial Paste:=xlPasteValues
+
+    sh2.Activate
+
+
+End Sub
+
+

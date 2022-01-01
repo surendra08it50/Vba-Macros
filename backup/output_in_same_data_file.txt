@@ -1,0 +1,199 @@
+Sub IRF_NRC()
+    
+    Dim workbookname, workbookname2, text_1 As String
+    Dim wkb, wb1, wb2 As Workbook
+    Dim shname, sh, sh2, sh3, sh4, sh5, sh6 As Worksheet
+    Dim lCol, lRow, firstblank1, sheet_number As Integer
+    Dim mypath As String
+    Dim range1, range2 As Range
+    Dim MyCount, sheetcount As Long
+    Dim OWB As Excel.Workbook
+    Dim lRow_sheet As Long
+    Dim myValue As Variant
+    Dim tempSheet As Worksheet
+    Dim tempSheet2 As Worksheet
+    
+    mypath = Application.ThisWorkbook.Path
+    
+    Application.DisplayAlerts = False
+    
+    Set sh = Application.ThisWorkbook.Worksheets("Sheet1")
+    Set sh2 = Application.ThisWorkbook.Worksheets("Sheet2")
+    
+    myValue = InputBox("Enter IWF supporting File name with extension")
+    
+    workbookname = myValue
+    
+
+    Set wb1 = Workbooks.Open(mypath & "\" & workbookname)
+
+    Set sh3 = Application.Workbooks(workbookname).Worksheets("toc")
+    firstblank1 = sh3.Range("A1").End(xlDown).Row
+    Set tempSheet = Application.Workbooks(workbookname).Worksheets.Add(Before:=Sheets("toc"))
+    Set tempSheet2 = Application.Workbooks(workbookname).Worksheets.Add
+
+'''''''''''############################# IRF File ###########################################################
+
+'''''''''''########################################################################################
+
+
+        i = 1
+        sheet_number = 0
+        text_1 = "Image Ranking_Pick the company here"    '''''find the text to search
+
+        sh3.Activate    ''''''activate toc sheet
+        With Columns("B")
+            .Find(What:=text_1, after:=.Cells(1, 1), LookIn:=xlFormulas).Select   ''' find the position of the searching text
+            sheet_number = Application.Selection.Row - 2
+        End With
+        MyCount = Application.CountIf(Range("B1:B" & firstblank1), "*Image Ranking_Pick the company here*")
+
+
+        '''''''''''
+    sh2.Range("J1:K40").Copy   '''''''copy attributes
+    tempSheet2.Range("A1").PasteSpecial Paste:=xlPasteValues
+    Application.CutCopyMode = False
+
+    lRow_sheet = 0
+    paste_row = 0
+    counter = 1
+    For j = sheet_number To sheet_number + MyCount - 1 ''''sheet_number + MyCount - 1'''loop for all MFOS
+
+        Set sh4 = Application.Workbooks(workbookname).Worksheets("" & j) ''''''go to that sheet where text match
+        sh4.Activate
+
+        firstblank = sh4.Range("A2").End(xlDown).Row
+        lCol = sh4.Cells(2, Columns.Count).End(xlToLeft).Column
+
+        RG = Left(Right(sh4.Range(Cells(1, lCol + 3), Cells(1, lCol + 3)).Value, 8), 3) & "_" & counter ''''''RG value
+
+        For i = 3 To lCol  '''''lCol   '''''loop for every attributes -40
+
+            With sh4
+                Set range2 = .Range(.Cells(1, 1), .Cells(.Range("A2").End(xlDown).Row, .Cells(2, Columns.Count).End(xlToLeft).Column))
+                .Range(range2.Address).Sort Key1:=Cells(2, 1), Order1:=xlAscending, Header:=xlNo
+                .Range(range2.Address).Sort Key1:=.Cells(2, i), Order1:=xlDescending, Header:=xlNo, _
+                OrderCustom:=1, MatchCase:=False, Orientation:=xlTopToBottom, _
+                DataOption1:=xlSortNormal
+            End With
+
+            sh4.Range("A2:A" & firstblank).Copy    '''''''copy column A to C data
+            tempSheet.Range(tempSheet.Cells(2 + lRow_sheet, 1), tempSheet.Cells(2 + lRow_sheet, 1)).PasteSpecial Paste:=xlPasteValues ''''paste the copied values
+            Application.CutCopyMode = False
+
+            sh4.Range(sh4.Cells(2, i), sh4.Cells(firstblank, i)).Copy
+            tempSheet.Range(tempSheet.Cells(2 + lRow_sheet, 3), tempSheet.Cells(2 + lRow_sheet, 3)).PasteSpecial Paste:=xlPasteValues
+            Application.CutCopyMode = False
+
+            lRow_sheet = tempSheet.Cells(Rows.Count, 1).End(xlUp).Row - 1
+
+            sh4.Cells(1, i).Copy   '''''''copy attributes
+            tempSheet.Range(tempSheet.Cells(2 + paste_row, 4), tempSheet.Cells(1 + lRow_sheet, 4)).PasteSpecial Paste:=xlPasteValues
+            Application.CutCopyMode = False
+
+            tempSheet.Range("E2").Formula = "= VLOOKUP(D2,Sheet2!$A$1:$B$40,2,0)"
+
+            tempSheet.Range("B" & (2 + paste_row)).Formula = "=RANK(C" & (2 + paste_row) & ",$C$" & (2 + paste_row) & ":$C$" & (1 + lRow_sheet) & ")"
+            tempSheet.Range("B" & (2 + paste_row)).Copy   '''''''copy formula for Rank
+            tempSheet.Range(tempSheet.Cells(3 + paste_row, 2), tempSheet.Cells(1 + lRow_sheet, 2)).PasteSpecial Paste:=xlPasteFormulas
+            Application.CutCopyMode = False
+
+            tempSheet.Range(tempSheet.Cells(2 + paste_row, 7), tempSheet.Cells(1 + lRow_sheet, 7)).Value = RG   ''''''RG value  Bus, Eng..
+            tempSheet.Range(tempSheet.Cells(2 + paste_row, 8), tempSheet.Cells(1 + lRow_sheet, 8)).Value = "2020"   ''''''RG value  Bus, Eng..
+
+            paste_row = lRow_sheet
+
+        Next
+            counter = counter + 1
+    Next
+            tempSheet.Range("E2").Copy
+            tempSheet.Range(tempSheet.Cells(3, 5), tempSheet.Cells(1 + lRow_sheet, 5)).PasteSpecial Paste:=xlPasteFormulas
+
+            '''''''''''''''''''''''''''''''
+            tempSheet.Columns("G").Replace _
+            What:="vey", Replacement:="Total", _
+            SearchOrder:=xlByColumns, MatchCase:=True
+            '''''''''''''''''''''''''''''''''''''
+
+            tempSheet.Range("A1") = "Company"
+            tempSheet.Range("B1") = "Rank"
+            tempSheet.Range("C1") = "Percentage"
+            tempSheet.Range("D1") = "Attribute"
+            tempSheet.Range("E1") = "Driver"
+            tempSheet.Range("F1") = "Industry"
+            tempSheet.Range("G1") = "Main field of study"
+            tempSheet.Range("H1") = "Year"
+            tempSheet.Range("I1") = "Survey"
+
+            tempSheet.Name = "IRF"
+
+
+''''''''''''''#####################  NRC file ##############################################
+
+''''''''''''''###################################################################
+
+        sheet_number = 0
+        MyCount = 0
+        counter = 1
+        text_1 = "NRC_Natural Recruitment Competitor"    '''''find the text to search
+
+        sh3.Activate    ''''''activate toc sheet
+        With Columns("B")
+            .Find(What:=text_1, after:=.Cells(1, 1), LookIn:=xlFormulas).Select   ''' find the position of the searching text
+            sheet_number = Application.Selection.Row - 2
+        End With
+        MyCount = Application.CountIf(Range("B1:B" & firstblank1), "*NRC_Natural Recruitment Competitor*")
+
+            lRow_sheet = 0
+        paste_row = 0
+    For j = sheet_number To sheet_number + MyCount - 1 ''''sheet_number + MyCount - 1'''loop for all MFOS
+
+        Set tempSheet = Application.Workbooks(workbookname).Worksheets.Add(after:=Sheets("toc"))
+
+        Set sh4 = Application.Workbooks(workbookname).Worksheets("" & j) ''''''go to that sheet where text match
+        sh4.Activate
+
+        firstblank = sh4.Range("A2").End(xlDown).Row
+        lCol = sh4.Cells(2, Columns.Count).End(xlToLeft).Column
+
+        RG = Left(Right(sh4.Range(Cells(1, lCol + 3), Cells(1, lCol + 3)).Value, 8), 3) & "_" & counter ''''''RG value
+
+        For i = 2 To lCol '''''lCol   '''''loop for every attributes -40
+
+            With sh4
+                Set range2 = .Range(.Cells(1, 1), .Cells(.Range("A2").End(xlDown).Row, .Cells(2, Columns.Count).End(xlToLeft).Column))
+                .Range(range2.Address).Sort Key1:=Cells(2, 1), Order1:=xlAscending, Header:=xlNo
+                .Range(range2.Address).Sort Key1:=.Cells(2, i), Order1:=xlDescending, Header:=xlNo, _
+                OrderCustom:=1, MatchCase:=False, Orientation:=xlTopToBottom, _
+                DataOption1:=xlSortNormal
+            End With
+
+            sh4.Range("A3:A7").Copy  '''copy attribute
+            sh4.Cells(2, i).PasteSpecial Paste:=xlPasteValues
+            Application.CutCopyMode = False
+
+            sh4.Range(Cells(1, i), Cells(6, i)).Copy '''''''copy column A to C data
+            tempSheet.Range("B" & i).PasteSpecial Transpose:=True ''''paste the copied values
+            Application.CutCopyMode = False
+
+
+         Next
+
+            ''''''''''''''''''''''''''''''''''''''''''''''
+            tempSheet.Name = "NRC_" & RG
+            counter = counter + 1
+
+    Next
+        tempSheet.Name = "NRC_Total"
+
+''''''''''''''###################################################################
+''''''''''''''###################################################################
+wb1.Worksheets(2).Activate
+
+MsgBox "Done!"
+
+End Sub
+
+
+
+

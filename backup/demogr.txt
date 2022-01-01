@@ -1,0 +1,122 @@
+Sub macro_demog()
+
+    Dim workbookname, workbookname2, workbookname3, text_1, market, Qtext, Qtext1, Qtext2, Qtext3 As String
+    Dim wkb, wb1, wb2, wb3 As Workbook
+    Dim shname, sh, sh2, sh3, sh4, sh5, sh6 As Worksheet
+    Dim lCol, lRow, firstblank1, sheet_number, counter, week_no, type_no, qno, new_insert, ban_1, ban_2, ban_3 As Integer
+    Dim mypath As String
+    Dim lRow_sheet As Long
+   
+    mypath = Application.Workbooks("Macro_copy-demographic.xlsm").Path
+    workbookname1 = Application.ThisWorkbook.Worksheets("Sheet1").Range("F3").Value
+    Set sh = Application.ThisWorkbook.Worksheets("Sheet1")
+
+
+On Error Resume Next
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+new_insert = 0
+For qno = 3 To 17
+
+        Qtext = sh.Range("G" & qno).Value & "- " & sh.Range("H" & qno).Value
+        Qtext1 = sh.Range("G" & qno).Value & "- " & sh.Range("I" & qno).Value
+        Qtext2 = sh.Range("G" & qno).Value & "- " & sh.Range("J" & qno).Value
+        Qtext3 = sh.Range("G" & qno).Value
+
+    Set wb1 = Application.Workbooks.Open(mypath & "\" & workbookname1)
+    Set sh2 = Application.ThisWorkbook.Worksheets("Sheet2")
+    Set sh4 = Application.ThisWorkbook.Worksheets("Sheet3")
+    Set sh3 = Application.Workbooks(workbookname1).Worksheets("Table of Contents")
+
+    ''sh2.UsedRange.Clear
+
+
+'''''''''''''''''''''''''''''''''from first brand'''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+   sh3.Activate
+   If (qno = 14 Or qno = 15 Or qno = 16 Or qno = 17) Then
+        With Columns("B")
+            .Find(what:=Qtext3, after:=.Cells(1, 1), LookIn:=xlFormulas).Select  ''' first non blank cell in the range
+            search_index = Application.Selection.Row
+        End With
+   Else
+        With Columns("B")
+            .Find(what:=Qtext1, after:=.Cells(1, 1), LookIn:=xlFormulas).Select  ''' first non blank cell in the range
+            search_index = Application.Selection.Row
+        End With
+    End If
+    sheet_no = sh3.Cells(search_index, "A").Value
+   Set sh1 = wb1.Worksheets("" & sheet_no)
+   sh1.Activate
+   
+   ban_1 = WorksheetFunction.Match("Public Influencers", sh1.Range("A17:AH17"), 0)
+   ban_2 = WorksheetFunction.Match("Millennials 18-35", sh1.Range("A17:AH17"), 0)
+   ban_3 = WorksheetFunction.Match("Drinkers", sh1.Range("A17:AH17"), 0)
+
+'    ''''''''''''''''''''''' Influencers banner'''''''''''''''''''''''''''''''
+    If (qno = 7 Or qno = 8 Or qno = 9 Or qno = 10 Or qno = 11 Or qno = 12 Or qno = 13) Then
+        sh1.Range(sh1.Cells(42, ban_1), sh1.Cells(43, ban_1 + 1)).Copy
+    ElseIf (qno = 14) Then
+        sh1.Range(sh1.Cells(38, ban_1), sh1.Cells(46, ban_1 + 1)).Copy
+    ElseIf (qno = 15) Then
+        sh1.Range(sh1.Cells(23, ban_1), sh1.Cells(27, ban_1 + 1)).Copy
+    ElseIf (qno = 16) Then
+        sh1.Range(sh1.Cells(71, ban_1), sh1.Cells(79, ban_1 + 1)).Copy
+    ElseIf (qno = 17) Then
+        sh1.Range(sh1.Cells(56, ban_1), sh1.Cells(64, ban_1 + 1)).Copy
+    Else
+        sh1.Range(sh1.Cells(45, ban_1), sh1.Cells(46, ban_1 + 1)).Copy
+    End If
+    sh2.Range("D" & 2 + new_insert).PasteSpecial Paste:=xlPasteValues
+    Application.CutCopyMode = False
+
+    ''''''''''''''''''''''' Millennials v/s Non-Millennials banner'''''''''''''''''''''''''''''''
+    If (qno = 7 Or qno = 8 Or qno = 9 Or qno = 10 Or qno = 11 Or qno = 12 Or qno = 13) Then
+        sh1.Range(sh1.Cells(42, ban_2), sh1.Cells(43, ban_2 + 2)).Copy
+    ElseIf (qno = 14) Then
+        sh1.Range(sh1.Cells(38, ban_2), sh1.Cells(46, ban_2 + 2)).Copy
+    ElseIf (qno = 15) Then
+        sh1.Range(sh1.Cells(23, ban_2), sh1.Cells(27, ban_2 + 2)).Copy
+    ElseIf (qno = 16) Then
+        sh1.Range(sh1.Cells(71, ban_2), sh1.Cells(79, ban_2 + 2)).Copy
+    ElseIf (qno = 17) Then
+        sh1.Range(sh1.Cells(56, ban_2), sh1.Cells(64, ban_2 + 2)).Copy
+    Else
+        sh1.Range(sh1.Cells(45, ban_2), sh1.Cells(46, ban_2 + 2)).Copy
+    End If
+    sh2.Range("F" & 2 + new_insert).PasteSpecial Paste:=xlPasteValues
+    Application.CutCopyMode = False
+
+    ''''''''''''''''''''''' Drinkers v/s Non-Drinkers banner'''''''''''''''''''''''''''''''
+    If (qno = 7 Or qno = 8 Or qno = 9 Or qno = 10 Or qno = 11 Or qno = 12 Or qno = 13) Then
+        sh1.Range(sh1.Cells(42, ban_3), sh1.Cells(43, ban_3 + 1)).Copy
+    ElseIf (qno = 14) Then
+        sh1.Range(sh1.Cells(38, ban_3), sh1.Cells(46, ban_3 + 1)).Copy
+    ElseIf (qno = 15) Then
+        sh1.Range(sh1.Cells(23, ban_3), sh1.Cells(27, ban_3 + 1)).Copy
+    ElseIf (qno = 16) Then
+        sh1.Range(sh1.Cells(71, ban_3), sh1.Cells(79, ban_3 + 1)).Copy
+    ElseIf (qno = 17) Then
+        sh1.Range(sh1.Cells(56, ban_3), sh1.Cells(64, ban_3 + 1)).Copy
+    Else
+        sh1.Range(sh1.Cells(45, ban_3), sh1.Cells(46, ban_3 + 1)).Copy
+    End If
+    sh2.Range("I" & 2 + new_insert).PasteSpecial Paste:=xlPasteValues
+    Application.CutCopyMode = False
+    
+    sh2.Cells(2 + new_insert, "C").Value = sh.Cells(qno, "G").Value
+    
+ 
+
+  new_insert = new_insert + 9
+Next
+
+    sh2.Range("D1").Value = "Influencers"
+    sh2.Range("F1").Value = "Millennials v/s Non-Millennials"
+    sh2.Range("I1").Value = "Drinkers v/s Non-Drinkers"
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+
+End Sub

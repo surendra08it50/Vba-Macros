@@ -1,0 +1,1114 @@
+
+##################################################################################
+1.) Dim and ReDim Statements
+
+ 
+
+''''Dim a single variable:
+
+Dim firstRowNumber As Integer
+
+ 
+
+'''''''Dim multiple variables:
+
+ 
+
+'''Incorrect method:
+
+Dim firstRowNumber, secondRowNumber, thirdRowNumber As Integer
+
+'''''It will only Dim thirdRowNumber as Integer and the other 2 variables firstRowNumber & secondRowNumber as Variant (default).
+
+ 
+
+''''''Correct methods:
+
+Dim firstRowNumber As Integer, secondRowNumber As Integer, thirdRowNumber As Integer
+
+or
+
+Dim totalRows As Integer, studentName As String, validDate As Date
+
+or
+
+Dim totalRows As Integer
+Dim studentName As String
+Dim validDate As Date
+
+2.) #################################################################################
+
+
+Dim statements can be declared at 3 basic levels:
+
+1) Procedure Level:
+
+sub Macro_1()
+
+	Dim strname as String
+
+	strname = "hi.."
+
+	msgbox strname
+
+End sub
+
+sub Macro_2()
+
+	''''return blank 
+	msgbox strname
+
+End Sub
+
+
+2) Module Level:
+
+Private strname as String
+sub Macro_1()
+
+	
+
+	strname = "hi.."
+
+	msgbox strname
+
+End sub
+
+sub Macro_2()
+
+
+	'''return values
+	msgbox strname
+
+End Sub
+
+
+3) Project Level:
+
+'''defined in module 3
+Public strname as String
+sub Macro_1()
+
+	
+
+	strname = "hi.."
+
+	msgbox strname
+
+End sub
+
+''''defined in module 4
+sub Macro_2()
+
+
+	'''return values
+	msgbox strname
+
+End Sub
+
+'''''''###################### Static Statement:##########################################################################
+
+Only Procedure-level variables can be declared Static. Variables declared with the Static statement retain their values while the code is running and thereafter, until your project is reset or the document is closed. This means the variable is not destroyed and retains its value between multiple calls to the procedure. Normally, a local variable in a procedure ceases to exist as soon as the procedure terminates. A static variable remains in existence and retains its most recent value. The next time your code calls the procedure, the variable is not reinitialized, and it still holds the latest value you assigned to it. You can use Static only on local variables. Example:
+'''' 
+
+Sub Counter1()
+
+Dim counter As Integer
+counter = counter + 1
+MsgBox counter
+
+End Sub
+
+ 
+
+Sub Counter2()
+
+Static counter As Integer
+counter = counter + 1
+MsgBox counter
+
+End Sub
+
+ 
+
+Each time you run the procedure Counter1, it will display the value 1. Each time you run the procedure Counter 2, the displayed value will be incremented by 1 ie. it will display 1, then 2, then 3, and so on.
+
+
+''''''''############################################
+
+
+
+''''''''''''Example using Type-Declaration Character:   Dim studentName$   instead of   Dim studentName As String
+
+
+
+'''''''''Variable Data Types
+
+ 
+
+A Type Declaration Character is a character appended to a variable name indicating the variable's data type. While declaring a variable using the Dim statement, for certain data types only (see below), you can use "type-declaration character" instead of the "As" clause. However this is not commonly used.
+
+ 
+
+Data Type	Type-Declaration Character/Suffixes
+Integer	%
+Long	&
+Single	!
+Double	#
+String	$
+Currency	@
+ 
+
+Example using Type-Declaration Character:   Dim studentName$   instead of   Dim studentName As String
+
+ 
+
+ 
+
+Numeric Data Types (which consist of numbers and can be computed mathematically using standard artihmetic operators) - 7 types:
+
+Byte, Integer and Long data types for calculations involving round figures (ie. integers).
+
+Single and Double data types (also called floating-point data types) for high precision (allow extremely small or large numbers) calculations.
+
+Currency data type for monetary calculations and accuracy.
+
+Decimal data type for calculations which involve a large number of digits and where accuracy is important.
+
+ 
+
+ 
+
+Non-Numeric Data Types - 5 types:
+
+String data type for text values.
+
+Date data type for dates.
+
+Boolean data types which take only one of two values: True or False.
+
+Object data type for any Object reference.
+
+Variant data type to hold any type of data. It is the default VBA data type - if you do not declare a variable.
+###################################################################################################
+
+
+Byte	1-byte
+Integer	2-bytes
+Long	4-bytes
+Single	4-bytes
+Double	8-bytes 
+Currency	8-bytes
+ Decimal	 12-bytes
+ String (variable-length)	10
+ Date	8-bytes
+ Boolean	2-bytes
+ Object	4-bytes
+ Variant (numeric)	16
+ 
+
+##########################################################################################
+
+
+Sub demoArray1()
+
+ 
+
+Dim myArray() As String
+ReDim myArray(3) As String
+
+ 
+
+myArray(1) = "Mon"
+myArray(2) = "Tue"
+myArray(3) = "Wed"
+
+MsgBox myArray(1) & ", " & myArray(2) & ", " & myArray(3)
+
+ 
+
+End Sub
+
+Sub demoArray2()
+
+
+Dim myArray() As String
+ReDim myArray(3) As String
+
+myArray(1) = "Mon"
+myArray(2) = "Tue"
+myArray(3) = "Wed"
+
+ReDim myArray(4) As String
+
+myArray(4) = "Thurs"
+
+MsgBox myArray(1) & ", " & myArray(2) & ", " & myArray(3) & ", " & myArray(4)
+
+ 
+
+End Sub
+
+Sub demoArray3()
+
+
+Dim myArray() As String
+ReDim myArray(3) As String
+
+myArray(1) = "Mon"
+myArray(2) = "Tue"
+myArray(3) = "Wed"
+
+ReDim Preserve myArray(4) As String
+
+myArray(4) = "Thurs"
+
+MsgBox myArray(1) & ", " & myArray(2) & ", " & myArray(3) & ", " & myArray(4)
+
+
+End Sub
+
+
+Sub demoarray4()
+
+    Dim sheet_name_array As Variant
+    Dim old_data_array As Variant
+    
+    sheet_name_array = Array("Ideal Ranking by MFS", "Considered rank by MFS", "Familiar Ranking by MFS", "Application Ranking by MFS")
+    old_data_array = Array("Data - % & rankings 2018", "Considered - % and ranks 2018", "FamiliarData -% & rankings 2018", "Application - % & rankings 2018")
+
+
+    For y = LBound(sheet_name_array) To UBound(sheet_name_array) '''UBound(sheet_name_array)
+    
+        Debug.Print sheet_name_array(y)
+    
+    
+    Next
+
+End Sub
+
+
+#####################################################################
+
+
+Sub macro_learn()
+
+    Dim sh, sh2, sh3, sh4 As Worksheet
+    Dim range As range
+ 
+    Set sh = Application.ThisWorkbook.Worksheets("Sheet1")
+    Set sh2 = Application.ThisWorkbook.Worksheets("Sheet2")
+    Set sh3 = Application.ThisWorkbook.Worksheets("Sheet3")
+    Set sh4 = Application.ThisWorkbook.Worksheets("Sheet4")
+    
+    Dim rCell As range
+    
+'    For Each rcell In sh2.range("A1:A5")
+    
+'        Debug.Print rcell
+'        Debug.Print rcell.Address
+'        Debug.Print rcell.Row
+'        Debug.Print rcell.Column
+        
+'        rcell.Offset(1, 1).Value = "*"
+        
+'    Next
+    
+'    sh2.Range("A1").Offset(RowOffset:=2, ColumnOffset:=3).Select   '''D3
+'    sh2.Range("A1").Offset(2, 3).Select   '''D3
+'
+'    sh2.Range("A1").Offset(RowOffset:=2).Select   '''A3
+'    sh2.Range("A1").Offset(2).Select   '''A3
+'
+'    sh2.Range("A1").Offset(ColumnOffset:=2).Select   '''C1
+'    sh2.Range("A1").Offset(, 2).Select  '''C1
+
+'''''********* First blank **********
+'Dim first_blank As Long
+''''''in a column D
+'    first_blank = sh.range("D1").End(xlDown).Row
+'
+'    Debug.Print first_blank
+
+''''''in a Row 3
+'    y = 1
+'    Do Until IsEmpty(Cells(3, y)) = True
+'        Cells(3, y).Offset(0, 1).Select
+'        r = r + 1
+'        y = y + 1
+'    Loop
+'    Debug.Print r + 1
+'''************* last non-blank ******************
+
+'Dim lRow As Long
+'Dim lCol As Long
+    
+'   ''''Find the last non-blank cell in column A(1)
+'        lRow = sh2.Cells(Rows.Count, 1).End(xlUp).Row
+'
+'   ''''Find the last non-blank cell in row 1
+'        lCol = sh2.Cells(7, Columns.Count).End(xlToLeft).Column
+'
+'    Debug.Print "Last Row: " & lRow & vbNewLine & _
+'            "Last Column: " & lCol
+    
+'''''***************  Sorting *****************
+'sh2.range("B6:I146").Sort Key1:=Cells(6, 9), Order1:=xlAscending, Header:=xlYes
+'Debug.Print Cells(6, 7)
+
+'''''***********************  Find what *******************
+'    With Columns("A")
+'        .Find(what:="*", after:=.Cells(3, 1), LookIn:=xlFormulas).Select  ''' first non blank cell in the range
+'        first_nonblank = Application.Selection.Row
+'    End With
+'    Debug.Print first_nonblank
+
+
+'''******************* Copy Paste*****************************************************************
+'sh.range("A1:A7").Copy
+'sh2.range("L6").PasteSpecial Paste:=xlPasteValues
+
+'''************ Filter ***********************
+
+'    Dim r As Integer
+'    r = 0
+'    For j = 4 To sh.Cells(1, Columns.Count).End(xlToLeft).Column
+'
+'        sh.range("B7").AutoFilter Field:=j, Criteria1:="<>"
+'        sh.range("B2:B" & sh.range("B2").End(xlDown).Row).Copy
+'        sh3.range("A2").Offset(ColumnOffset:=r).PasteSpecial Paste:=xlPasteValues
+'        sh.AutoFilterMode = False
+'        r = r + 1
+'    Next
+'''********************************
+    
+'Dim rowNo As Integer
+'
+'rowNo = 1
+'
+'Do Until IsEmpty(sh.Cells(rowNo, 1))
+'
+'    sh.Cells(rowNo, 1).Interior.Color = RGB(255, 255, 0)
+'
+'    rowNo = rowNo + 1
+'
+'Loop
+
+''''***********   create Range ******************
+'Dim range3 As range
+'Dim max_employer, col_no_Emp_industry, mfs_no  As Integer
+'
+'max_employer = 191
+'col_no_Emp_industry = 11
+'mfs_no = 7
+'
+''For i = 0 To mfs_no - 1
+'For i = 6 To 6
+'    With sh4
+'        Set range3 = .range(Cells(4, "A"), Cells(max_employer + 3, "I"))
+'        'range3.Select
+'        range3.Offset(, col_no_Emp_industry * i).Select
+'    End With
+'
+'Next
+
+''**********************************************************************
+''**********************************************************************
+' For Each rcell In sh2.range("A1:A5")
+   
+'        Debug.Print rcell
+'        Debug.Print rcell.Address
+'        Debug.Print rcell.Row
+        'Debug.Print rcell.Column
+'
+'        rcell.Offset(1, 1).Value = "*"
+       
+'    Next
+
+'''***************** Array ************************
+
+'Dim myArray() As String
+'ReDim myArray(3) As String
+'
+'myArray(1) = "Mon"
+'myArray(2) = "Tue"
+'myArray(3) = "Wed"
+'
+'ReDim Preserve myArray(4) As String
+'
+'myArray(4) = "Thurs"
+'
+'Debug.Print myArray(1) & ", " & myArray(2) & ", " & myArray(3) & ", " & myArray(4)
+
+
+''**********************************************************************
+
+'For Each rCell In ActiveSheet.range("B7:B15")
+'
+'    rCell.Interior.Color = RGB(255, 255, 0)
+'        Debug.Print rCell.Address
+'
+'Next rCell
+
+
+'**********************use End(xlUp) to determine Last Row with Data, in one column (column B)
+'Dim lastRow As Long
+'
+''Rows.count returns the last row of the worksheet (which in Excel 2007 is 1,048,576); Cells(Rows.count, "B") returns the cell B1048576, ie. last cell in column B, and the code starts from this cell moving upwards; the code is bascially executing Range("B1048576").End(xlUp), and Range("B1048576").End(xlUp).Row finally returns the last row number.
+'lastRow = ActiveSheet.Cells(Rows.Count, "B").End(xlUp).Row
+'
+'MsgBox lastRow
+
+'****************use End(xlUp) to determine Last Row with Data, in one column (column B)
+'Dim lastRow As Long
+'
+'lastRow = ActiveSheet.range("B" & Rows.Count).End(xlUp).Row
+'
+'MsgBox lastRow
+
+'****************use End(xlToLeft) to determine Last Column with Data, in one row (row number 2)
+'Dim lastColumn As Integer
+'
+'lastColumn = ActiveSheet.Cells(2, Columns.Count).End(xlToLeft).Column
+'
+'MsgBox lastColumn
+
+'**********************UsedRange property to find the last used row number in a worksheet
+'
+'Dim lastRow As Long
+'
+'lastRow = ActiveSheet.UsedRange.Rows(ActiveSheet.UsedRange.Rows.Count).Row
+'
+'MsgBox lastRow
+
+'*******************UsedRange property to find the last used row number in a worksheet
+'Dim lastRow As Long
+'
+'lastRow = ActiveSheet.UsedRange.Rows(ActiveSheet.UsedRange.Rows.Count).Row
+'
+'MsgBox lastRow
+
+'*******************UsedRange property to find the last used column number in a worksheet
+'Dim lastColumn As Integer
+'
+'lastColumn = ActiveSheet.UsedRange.Column - 1 + ActiveSheet.UsedRange.Columns.Count
+'
+'MsgBox lastColumn
+
+'***********************************UsedRange property to find the last used column number in a worksheet
+'Dim lastColumn As Integer
+'
+'lastColumn = ActiveSheet.UsedRange.Columns(ActiveSheet.UsedRange.Columns.Count).Column
+'
+'MsgBox lastColumn
+
+'*************************UsedRange property to find number of used rows in a worksheet
+'Dim usedRows As Long
+'
+'usedRows = ActiveSheet.UsedRange.Rows.Count
+'
+'MsgBox usedRows
+
+
+'*************************UsedRange property to find number of used columns in a worksheet
+'Dim usedColumns As Integer
+'
+'usedColumns = ActiveSheet.UsedRange.Columns.Count
+'
+'MsgBox usedColumns
+
+'**********************UsedRange property to find the first used row number in a worksheet
+'Dim firstRow As Long
+'
+'firstRow = ActiveSheet.UsedRange.Cells(1).Row
+'
+'MsgBox firstRow
+
+'**********************UsedRange property to find the first used row number in a worksheet
+'Dim firstRow As Long
+'
+'firstRow = ActiveSheet.UsedRange.Row
+'
+'MsgBox firstRow
+
+'**********************************UsedRange property to find the first used column number in a worksheet
+'Dim firstColumn As Integer
+'
+'firstColumn = ActiveSheet.UsedRange.Cells(1).Column
+'
+'MsgBox firstColumn
+
+
+'************************UsedRange property to find the first used column number in a worksheet
+'Dim firstColumn As Integer
+'
+'firstColumn = ActiveSheet.UsedRange.Column
+'MsgBox firstColumn
+
+'*************End(xlDown) method to determine Last Row with Data, at the End of a Block in a column (column D)
+'Dim lastRow As Long
+'lastRow = ActiveSheet.range("D2").End(xlDown).Row
+'Debug.Print lastRow
+
+
+'******************End(xlToRight) method to determine Last Column with Data, at the End of a Block in a row (row 4)
+'Dim lastColumn As Integer
+'lastColumn = ActiveSheet.range("C3").End(xlToRight).Column
+'Debug.Print lastColumn
+
+
+'*****************FIND method to determine Last Row with Data, in a worksheet
+'Dim lastRow As Long
+'
+'Dim rng As range
+'
+'Set rng = ActiveSheet.Cells
+'
+'lastRow = rng.Find(What:="*", After:=rng.Cells(1), Lookat:=xlPart, LookIn:=xlFormulas, SearchOrder:=xlByRows, SearchDirection:=xlPrevious, MatchCase:=False).Row
+'
+'MsgBox lastRow
+
+
+'*******************FIND method to determine Last column with Data, in a worksheet
+'Dim lastColumn As Integer
+'
+'Dim rng As range
+'Set rng = ActiveSheet.Cells
+'lastColumn = rng.Find(What:="*", After:=rng.Cells(1), Lookat:=xlPart, LookIn:=xlFormulas, SearchOrder:=xlByColumns, SearchDirection:=xlPrevious, MatchCase:=False).Column
+'
+'MsgBox lastColumn
+
+
+''''ActiveSheet.range("hi").Value = 10
+
+''*************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+End Sub
+
+
+Sub EndProperty()
+'using the End property - refer Image 1.
+
+Dim ws As Worksheet
+
+Set ws = Worksheets("Sheet1")
+
+ws.Activate
+
+'selects cell C12 (Helen):
+
+range("C5").End(xlDown).Select
+
+'selects cell C17 (55) - C12 is the last cell with data in a block, and in this case it selects the next cell with data which is C17:
+
+range("C12").End(xlDown).Select
+
+'selects cell C18 (66):
+
+range("C17").End(xlDown).Select
+
+'selects cell C17 (55) - C14 is a blank cell, and in this case it selects the next cell with data:
+
+range("C14").End(xlDown).Select
+
+'selects the last worksheet row if the column is blank - cell F1048576 in this case (Excel 2007 has 1048576 rows):
+
+range("F1").End(xlDown).Select
+
+'selects cell E7 (7):
+
+range("C7").End(xlToRight).Select
+
+'selects cell G7 (22):
+
+range("E7").End(xlToRight).Select
+
+'selects cell XFD7, which is the last column in row 7, because cell I7 is the last cell with data in this row:
+
+range("I7").End(xlToRight).Select
+
+'selects cell I7 (26):
+
+range("I14").End(xlUp).Select
+
+'selects cell E6 (Jim):
+
+range("E18").End(xlUp).Select
+
+'selects range C5:C12 - from cell C5 to bottom end of the range at cell C12:
+
+range("C5", range("C5").End(xlDown)).Select
+
+
+End Sub
+
+Sub demoArray5()
+'using a two-dimensional array: Quarterly Sales of a company over the past 5 years.
+
+
+Dim i As Integer, n As Integer
+
+Dim lSales(3, 4) As Long
+
+lSales(0, 0) = 500
+lSales(1, 0) = 520
+lSales(2, 0) = 545
+lSales(3, 0) = 595
+
+lSales(0, 1) = 500
+lSales(1, 1) = 520
+lSales(2, 1) = 545
+lSales(3, 1) = 595
+
+lSales(0, 2) = 410
+lSales(1, 2) = 440
+lSales(2, 2) = 425
+lSales(3, 2) = 485
+
+lSales(0, 3) = 320
+lSales(1, 3) = 330
+lSales(2, 3) = 335
+lSales(3, 3) = 300
+
+lSales(0, 4) = 250
+lSales(1, 4) = 280
+lSales(2, 4) = 275
+lSales(3, 4) = 205
+
+
+For i = 0 To 3
+
+    For n = 0 To 4
+    
+        Sheet6.Cells(i + 1, n + 1) = lSales(i, n)
+    
+    Next n
+
+Next i
+
+Debug.Print UBound(lSales)
+
+Dim myArray(1 To 4, 1 To 2) As Integer
+
+Debug.Print UBound(myArray)
+
+End Sub
+
+Sub demoArray8()
+'declare dynamic array: Redim statement WITH Preserve keyword
+
+
+Dim myArray() As String
+ReDim myArray(0 To 3) As String
+
+
+myArray(1) = "Mon"
+myArray(2) = "Tue"
+myArray(3) = "Wed"
+
+
+'ReDim Preserve myArray(1 To 4) As String
+'myArray(4) = "Thurs"
+
+
+MsgBox myArray(1) & ", " & myArray(2) & ", " & myArray(3) & ", " & myArray(1) & ", " & myArray(1)
+
+
+Debug.Print UBound(myArray)
+
+End Sub
+
+Sub demoArray3()
+'manage Arrays with vba Loops
+
+
+Dim i As Integer
+Dim strFirstName(2 To 5) As String, sngHeight(2 To 5) As Single
+
+
+'For i = 2 To 5
+'
+'strFirstName(i) = InputBox("Enter First Name")
+'sngHeight(i) = InputBox("Enter Height in cms")
+'
+'
+'Sheet5.Cells(i, 1) = strFirstName(i)
+'Sheet5.Cells(i, 2) = sngHeight(i) & " cms"
+'
+'Next i
+
+Debug.Print LBound(strFirstName)
+
+
+
+End Sub
+
+
+Sub Range_Find_Method()
+'Finds the last non-blank cell on a sheet/range.
+
+Dim lRow As Long
+Dim lCol As Long
+    
+    lRow = Cells.Find(what:="*", _
+                    after:=Range("A1"), _
+                    LookAt:=xlPart, _
+                    LookIn:=xlFormulas, _
+                    SearchOrder:=xlByRows, _
+                    SearchDirection:=xlPrevious, _
+                    MatchCase:=False).Row
+    
+    MsgBox "Last Row: " & lRow
+
+End Sub
+
+Sub Range_End_Method()
+'Finds the last non-blank cell in a single row or column
+
+Dim lRow As Long
+Dim lCol As Long
+    
+    'Find the last non-blank cell in column A(1)
+    lRow = Cells(Rows.Count, 1).End(xlUp).Row
+    
+    'Find the last non-blank cell in row 1
+    lCol = Cells(1, Columns.Count).End(xlToLeft).Column
+    
+    MsgBox "Last Row: " & lRow & vbNewLine & _
+            "Last Column: " & lCol
+  
+End Sub
+
+
+'''''  first blank in a row
+Sub FindFirstCellEmpty()
+
+    y = 1
+    Do Until IsEmpty(Cells(3, y)) = True
+        Cells(3, y).Offset(0, 1).Select
+        r = r + 1
+        y = y + 1
+    Loop
+
+    Debug.Print (r + 1)
+
+
+
+End Sub
+
+Sub doUntil1()
+'Colors the empty cells yellow, until a non-empty cell is encountered. If the first cell is not empty, the code will not execute because the condition of "Not Empty" is mentioned at the start of the loop.
+
+
+Dim rowNo As Integer
+
+rowNo = 1
+
+Do Until Not IsEmpty(Cells(rowNo, 1))
+
+    Cells(rowNo, 1).Interior.Color = RGB(255, 255, 0)
+    rowNo = rowNo + 1
+
+Loop
+
+End Sub
+
+Sub doUntil1_2()
+'Colors the non empty cells yellow, until a empty cell is encountered. If the first cell is not empty, the code will not execute because the condition of "Not Empty" is mentioned at the start of the loop.
+
+
+Dim rowNo As Integer
+
+rowNo = 1
+
+Do Until IsEmpty(Cells(rowNo, 2))
+
+    Cells(rowNo, 2).Interior.Color = RGB(255, 255, 0)
+    rowNo = rowNo + 1
+
+Loop
+
+End Sub
+
+
+Sub Errorhandler()
+
+On Error GoTo ErrMsg
+    x = 12
+    y = 20 / 0
+    Z = 30
+    Exit Sub
+
+ErrMsg:
+    MsgBox "There seems to be an error" & vbCrLf & Err.Description
+    On Error GoTo -1
+On Error GoTo ErrMsg2
+    A = 10 / 2
+    B = 35 / 0
+    Exit Sub
+
+ErrMsg2:
+    MsgBox "There seems to be an error again" & vbCrLf & Err.Description
+
+End Sub
+
+Sub Data_chek()
+
+    
+    Dim workbookname, workbookname2 As String
+    Dim wkb As Workbook
+    Dim shname, sh2, sh3 As Worksheet
+    Dim lCol, lRow As Integer
+    Dim mypath As String
+    mypath = ActiveWorkbook.Path
+    
+    Set wkb = Workbooks.Add
+    wkb.SaveAs mypath & "\" & "final2.xlsx"
+    
+    
+    workbookname = "UKTS_IESS_2019_datacheck.xlsx"
+    workbookname2 = "final.xlsx"
+    
+    Set sh2 = Application.Workbooks("final2.xlsx").Worksheets("Sheet1")
+    Set sh3 = Application.Workbooks(workbookname).Worksheets("toc")
+     lRow = sh3.Cells(Rows.Count, 1).End(xlUp).Row  'Find the last non-blank cell in column
+    
+    Dim x, y As Integer
+    x = 1
+    
+    For i = 0 To lRow - 2
+            Set shname = Application.Workbooks(workbookname).Worksheets("" & i)
+            lCol = shname.Cells(2, Columns.Count).End(xlToLeft).Column  'Find the last non-blank cell in row
+            
+            sh2.Cells(x, 1).Value = shname.Cells(1, lCol + 9).Value
+            sh2.Cells(x, 2).Value = shname.Cells(1, lCol + 10).Value
+            x = x + 1
+            
+        
+    Next
+    
+
+
+''''''''''' highlight duplicate''''''''''''''
+
+    Dim lastRow As Long
+    Dim matchFoundIndex As Long
+    Dim iCntr As Long
+    lastRow = range("A65000").End(xlUp).Row
+
+    For iCntr = 1 To lastRow
+        With sh2
+            If .Cells(iCntr, 1) <> "" Then
+                matchFoundIndex = WorksheetFunction.Match(.Cells(iCntr, 1), .range("A1:A" & lastRow), 0)
+                If iCntr <> matchFoundIndex Then
+                    .Cells(iCntr, 1).Interior.Color = vbYellow
+               End If
+            End If
+        End With
+    Next
+    
+  '''''''''''''''''''''
+    
+wkb.Save
+    
+
+End Sub
+
+
+
+Sub Data_chek_2()
+
+    
+    Dim workbookname, workbookname2, workbookname3, text_1 As String
+    Dim wkb, wb1, wb2, wb3 As Workbook
+    Dim shname, sh, sh2, sh3, sh4, sh5, sh6 As Worksheet
+    Dim lCol, lRow, firstblank1, sheet_number, counter As Integer
+    Dim mypath As String
+    mypath = ActiveWorkbook.Path
+    
+    Set sh = Application.ThisWorkbook.Worksheets("Sheet1")
+    firstblank1 = sh.range("F2").End(xlDown).Row     '''find the first blank cell in macro file sheet1
+    
+counter = 2
+workbookname3 = "summary.xlsx"
+Set wb3 = Workbooks.Open(mypath & "\" & workbookname3)
+    
+For j = 3 To firstblank1
+
+    workbookname1 = Application.ThisWorkbook.Worksheets("Sheet1").range("F" & j).Value  ''''different report file name, excel workbook
+    workbookname = workbookname1 & ".xlsx"
+    workbookname2 = sh.range("E" & j) & ".xlsx"  ''''''template file name
+    
+
+
+    Set wb1 = Workbooks.Open(mypath & "\" & workbookname)
+    Set wb2 = Workbooks.Open(mypath & "\" & workbookname2)
+    
+    Set sh3 = Application.Workbooks(workbookname).Worksheets("toc")
+    Set sh6 = Application.Workbooks(workbookname3).Worksheets("Sheet1")  ''''summary excel file
+
+    For i = 1 To 8
+        Application.CutCopyMode = False
+        sheet_number = 0
+        Set sh5 = Application.Workbooks(workbookname2).Worksheets("" & i)  '''''template file
+        text_1 = sh5.range("A1").Value    '''''find the text to search  ''''table name
+
+        sh3.Activate
+        With Columns("B")
+            .Find(what:=text_1, after:=.Cells(1, 1), LookIn:=xlFormulas).Select   ''' find the position of the searching text
+            sheet_number = Application.Selection.Row
+
+        End With
+        
+        sheet_number2 = sh3.range("A" & sheet_number).Value
+        
+        Debug.Print (sh3.range("A" & sheet_number).Value)
+        
+        On Error Resume Next
+        'On Error GoTo eh
+        
+            Set sh4 = Application.Workbooks(workbookname).Worksheets("" & (sheet_number2)) ''''''go to that sheet where text match
+            sh4.Activate
+    
+            firstblank = sh4.range("A2").End(xlDown).Row
+    
+            sh4.range("A2:C" & firstblank).Copy    '''''''copy column A to C data
+    
+            sh5.range("A3").PasteSpecial Paste:=xlPasteValues   ''''paste the copied values
+            
+            Application.CutCopyMode = False
+eh:
+            
+            sh6.Cells(counter, 1).Value = workbookname2
+            sh6.Cells(counter, 2).Value = workbookname1
+            sh6.Cells(counter, 3).Value = text_1
+            sh6.Cells(counter, 4).Value = sh5.range("G1").Value
+            sh6.Cells(counter, 5).Value = sh5.range("H1").Value
+            
+            counter = counter + 1
+
+    Next i
+    
+        
+    
+        Workbooks(workbookname).Close SaveChanges:=False  ''close
+
+        wb2.SaveAs Filename:=mypath & "\" & workbookname1 & "_checking.xlsx" '''rename template file
+
+       wb2.Close SaveChanges:=True
+
+
+Next j
+ 
+       wb3.Close SaveChanges:=True
+
+End Sub
+
+
+
+
+
+''''''''''''''''''''''sub procedure to over write an excel file
+Sub ExampleToOverWriteExistingWorkbook()
+'Declaration: Declaring the variable
+Dim wkb As Workbook
+
+'Adding New Workbook using Workbook.Add method and setting to wkb Object
+Set wkb = Workbooks.Add
+
+'Saving the Workbook
+
+'Desable the application alerts before svaing the file
+Application.DisplayAlerts = False
+
+'Now save the file
+wkb.SaveAs "C:\WorkbookName.xls" ' change to existng file name
+'OR
+'wkb.SaveAs Filename:="C:\WorkbookName1.xls"</span>
+
+'Eanbling the Application Aletrts after saving the file
+Application.DisplayAlerts = True
+
+End Sub
+
+
+
+Sub GetComputerUserName()
+
+Dim ComputerName, UserName As String
+
+'Getting computer name
+ComputerName = Environ("computername")
+
+'Getting user name
+UserName = Environ("username")
+
+'Assigning value to cell C10 and C11
+range("C10").Value = ComputerName
+range("C11").Value = UserName
+
+End Sub
+
+Sub GetUserName_Environ()
+    Dim ObjWshNw As Object
+    Set ObjWshNw = CreateObject("WScript.Network")
+    
+    MsgBox ObjWshNw.UserName
+    MsgBox ObjWshNw.ComputerName
+    MsgBox ObjWshNw.UserDomain
+End Sub
+
+
+''''''''''''''''Final
+Sub GetUsername()
+    Set objAD = CreateObject("ADSystemInfo")
+    Set objUser = GetObject("LDAP://" & objAD.UserName)
+    MsgBox objUser.DisplayName
+    'strDisplayName = objUser.DisplayName
+    
+End Sub
+
+Sub formula1()
+
+Dim k As Integer
+k = 3
+
+    range("A1").Formula = "=(D2=E" & k & ")"
+
+
+End Sub
+
+
+*****************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

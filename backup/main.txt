@@ -1,0 +1,105 @@
+Sub macro_mun()
+
+    Dim workbookname, workbookname2, workbookname3, text_1, market, Qtext, Qtext1, Qtext2, Qtext3 As String
+    Dim wkb, wb1, wb2, wb3 As Workbook
+    Dim shname, sh, sh2, sh3, sh4, sh5, sh6 As Worksheet
+    Dim lCol, lRow, firstblank1, sheet_number, counter, week_no, type_no, qno, new_insert, m As Integer
+    Dim mypath As String
+    Dim lRow_sheet As Long
+   
+    mypath = Application.Workbooks("Macro_copy - 2.xlsm").Path
+    workbookname1 = Application.ThisWorkbook.Worksheets("Sheet1").Range("F3").Value
+    Set sh = Application.ThisWorkbook.Worksheets("Sheet1")
+
+On Error Resume Next
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+new_insert = 0
+For qno = 3 To 13
+
+        Qtext = sh.Range("G" & qno).Value & "- " & sh.Range("H" & qno).Value
+'        Qtext1 = sh.Range("G" & qno).Value & "- " & sh.Range("I" & qno).Value
+'        Qtext2 = sh.Range("G" & qno).Value & "- " & sh.Range("J" & qno).Value
+
+    Set wb1 = Application.Workbooks.Open(mypath & "\" & workbookname1)
+    Set sh2 = Application.ThisWorkbook.Worksheets("Sheet2")
+    Set sh4 = Application.ThisWorkbook.Worksheets("Sheet3")
+    Set sh3 = Application.Workbooks(workbookname1).Worksheets("Table of Contents")
+
+    ''sh2.UsedRange.Clear
+
+''''''''''''''''''from summary table'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    sh3.Activate
+    With Columns("B")
+        .Find(what:=Qtext, after:=.Cells(1, 1), LookIn:=xlFormulas).Select  ''' first non blank cell in the range
+        search_index = Application.Selection.Row
+    End With
+
+    sheet_no = sh3.Cells(search_index, "A").Value
+   Set sh1 = wb1.Worksheets("" & sheet_no)
+
+   sh1.Activate
+    lCol = Cells(15, Columns.Count).End(xlToLeft).Column
+
+    sh1.Range(sh1.Cells(15, "B"), sh1.Cells(15, lCol)).Copy   '''brands name
+    sh2.Range("D" & 1 + new_insert).PasteSpecial Paste:=xlPasteValues
+    Application.CutCopyMode = False
+
+    sh1.Range(sh1.Cells(17, "B"), sh1.Cells(17, lCol)).Copy  '''base
+    sh2.Range("D" & 2 + new_insert).PasteSpecial Paste:=xlPasteValues
+    Application.CutCopyMode = False
+
+    sh1.Range(sh1.Cells(22, "B"), sh1.Cells(22, lCol)).Copy  '''first stub value
+    sh2.Range("D" & 4 + new_insert).PasteSpecial Paste:=xlPasteValues
+    Application.CutCopyMode = False
+
+    If (qno = 7 Or qno = 8 Or qno = 9 Or qno = 10 Or qno = 11 Or qno = 12 Or qno = 13) Then
+        sh1.Range(sh1.Cells(40, "B"), sh1.Cells(40, lCol)).Copy   '''Net values
+    Else
+        sh1.Range(sh1.Cells(43, "B"), sh1.Cells(43, lCol)).Copy   '''Net values
+    End If
+    sh2.Range("D" & 3 + new_insert).PasteSpecial Paste:=xlPasteValues
+    Application.CutCopyMode = False
+
+'''''''''''''''''''''''''''''''''from first brand'''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    For mcell = 1 To 6
+       Debug.Print mcell
+        Qtext1 = sh.Range("G" & qno).Value & "- " & sh.Range(sh.Cells(3, 8 + mcell), sh.Cells(3, 8 + mcell)).Value
+
+       sh3.Activate
+        With Columns("B")
+            .Find(what:=Qtext1, after:=.Cells(1, 1), LookIn:=xlFormulas).Select  ''' first non blank cell in the range
+            search_index = Application.Selection.Row
+        End With
+
+        sheet_no = sh3.Cells(search_index, "A").Value
+        Set sh1 = wb1.Worksheets("" & sheet_no)
+        sh1.Activate
+
+        If (qno = 7 Or qno = 8 Or qno = 9 Or qno = 10 Or qno = 11 Or qno = 12 Or qno = 13) Then
+            sh1.Range(sh1.Cells(42, "B"), sh1.Cells(42, "D")).Copy
+        Else
+            sh1.Range(sh1.Cells(45, "B"), sh1.Cells(45, "D")).Copy
+        End If
+        sh2.Range("D" & 5 + mcell + new_insert).PasteSpecial Paste:=xlPasteValues
+        Application.CutCopyMode = False
+        
+        sh2.Cells(5 + mcell + new_insert, "C").Value = sh.Range(sh.Cells(3, 8 + mcell), sh.Cells(3, 8 + mcell)).Value
+        
+        sh2.Range("G" & 5 + mcell + new_insert).Value = (sh2.Cells(5 + mcell + new_insert, 4).Value - sh2.Cells(5 + mcell + new_insert, 5).Value)
+        sh2.Range("G" & 6 + mcell + new_insert).Value = (sh2.Cells(6 + mcell + new_insert, 4).Value - sh2.Cells(6 + mcell + new_insert, 5).Value)
+        
+      Next
+    
+  sh2.Cells(1 + new_insert, "C").Value = sh.Cells(qno, "G").Value
+  new_insert = new_insert + 9 + mcell
+Next
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+
+End Sub

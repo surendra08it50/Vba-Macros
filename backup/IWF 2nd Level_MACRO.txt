@@ -1,0 +1,198 @@
+Sub weight_match()
+
+    Dim workbookname, workbookname2, workbookname3, text_1 As String
+    Dim wb, wkb, wb1, wb2, wb3 As Workbook
+    Dim shname, sh, sh2, sh3, sh4, sh5, sh6, sh_consider_output, sh_consider_input, sh_Q_consider_input As Worksheet
+    Dim lCol, lRow, firstblank1, sheet_number, counter, uni_number, precode_number, precode_number2, precode_number3, start_yr, start_yr2, no_yr As Integer
+    Dim mypath As String
+    
+    mypath = ActiveWorkbook.Path
+    Set wb = ThisWorkbook
+    Set sh = Application.ThisWorkbook.Worksheets("Sheet1")
+    Set sh5 = Application.ThisWorkbook.Worksheets("2019")
+
+    workbookname1 = Application.ThisWorkbook.Worksheets("Sheet1").Range("F3").Value  ''''different report file name, excel workbook
+    start_yr = sh.Range("E3").Value  ''''start year
+    start_yr2 = start_yr
+    
+    no_yr = (2019 - start_yr + 1)
+    
+    Application.DisplayAlerts = False
+    
+   ' Set wb1 = Workbooks.Open(mypath & "\" & workbookname1)
+    
+    Set sh2 = Application.Workbooks(workbookname1).Worksheets("raw data - MFOS breakdown")
+    Set sh3 = Application.ThisWorkbook.Worksheets("output")
+    
+    Set sh_consider_output = Application.ThisWorkbook.Worksheets("output_consider_ideal")
+    
+    uni_number = sh2.Range("A2").End(xlDown).Row   '''find the first blank cell
+            
+    precode_number = 2
+    precode_number2 = 0
+    lCol = sh5.Cells(6, Columns.Count).End(xlToLeft).Column  '''last column
+    sh2.Activate
+    
+' '''''''''''''''''''''''''''career goals'''''''''''''''''''''''''''''''
+ ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+ Dim sheet_name1(), filter_name As String
+ ReDim sheet_name1(no_yr)
+ Dim yr As Long
+ yr = 2019
+ filter_name = ">=" & (start_yr)
+
+    For k = 1 To no_yr
+        sheet_name1(k) = "" & yr
+        yr = yr - 1
+    Next
+
+    sh2.Range("A1").AutoFilter Field:=3, Criteria1:="Career Goals"
+    sh2.Range("A1").AutoFilter Field:=4, Criteria1:=filter_name, Operator:=xlAnd, Criteria2:="<=2019"
+    sh2.Range("A1").AutoFilter Field:=5, Criteria1:="<>ALL MFOS"
+    sh2.Range(sh2.Cells(1, 1), sh2.Cells(uni_number, 5)).SpecialCells(xlCellTypeVisible).Copy
+    sh3.Cells(1, 1).PasteSpecial Paste:=xlPasteValues '''paste precode
+    sh2.AutoFilterMode = False
+    wb.Save
+   precode_number2 = 2
+
+    For i = 4 To lCol
+        For j = 1 To no_yr
+            Set sh4 = Application.ThisWorkbook.Worksheets(sheet_name1(j))
+            Application.CutCopyMode = False
+            sh4.Range(sh4.Cells(7, i), sh4.Cells(15, i)).Copy
+            sh3.Cells(precode_number2, 8).PasteSpecial Paste:=xlPasteValues '''paste precode
+            wb.Save
+            precode_number2 = precode_number2 + 9
+            ''''precode_number2 = sh3.Range("H2").End(xlDown).Row + 1
+        Next
+
+    Next
+    wb.Save
+    precode_number2 = sh3.Range("A2").End(xlDown).Row
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''' Gender '''''''''''''''''''''''''''''''
+ Dim sheet_name2() As String
+ ReDim sheet_name2(no_yr)
+ Dim yr2 As Long
+
+    For k1 = 1 To no_yr
+        If k1 = 1 Then
+            sheet_name2(k1) = "2019"
+        Else
+            sheet_name2(k1) = "" & start_yr2
+            start_yr2 = start_yr2 + 1
+        End If
+
+        Debug.Print sheet_name2(k1)
+    Next
+
+    sh2.Range("A1").AutoFilter Field:=3, Criteria1:="Gender"
+    sh2.Range("A1").AutoFilter Field:=4, Criteria1:=filter_name, Operator:=xlAnd, Criteria2:="<=2019"
+    sh2.Range("A1").AutoFilter Field:=5, Criteria1:="<>ALL MFOS"
+    sh2.Range(sh2.Cells(2, 1), sh2.Cells(uni_number, 5)).SpecialCells(xlCellTypeVisible).Copy
+    sh3.Cells(precode_number2 + 1, 1).PasteSpecial Paste:=xlPasteValues '''paste precode
+    sh2.AutoFilterMode = False
+    wb.Save
+
+    For i = 4 To lCol
+        For j = 1 To 5
+            Set sh4 = Application.ThisWorkbook.Worksheets(sheet_name2(j))
+            Application.CutCopyMode = False
+            sh4.Range(sh4.Cells(16, i), sh4.Cells(17, i)).Copy
+            sh3.Cells(precode_number2 + 1, 8).PasteSpecial Paste:=xlPasteValues '''paste precode
+            wb.Save
+            precode_number2 = precode_number2 + 2
+            ''''precode_number2 = sh3.Range("H2").End(xlDown).Row + 1
+        Next
+    Next
+    wb.Save
+    precode_number2 = sh3.Range("A2").End(xlDown).Row
+
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    sh3.Range("J2").Formula = "=(H2=B2)"
+    sh3.Range("J2").Copy
+    sh3.Range("J3:J" & precode_number2).PasteSpecial
+    sh3.Range("J1").Formula = "=COUNTIF(J2:J" & precode_number2 & ",""FALSE"")"
+
+'''''''''''''''''''''' [Q] Number of Considered / Ideal answers ''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Dim no_employer, no_mfos As Long
+
+Set sh_consider_input = Application.ThisWorkbook.Worksheets("No of Considered_Ideal answers")
+Set sh_Q_consider_input = Application.ThisWorkbook.Worksheets("Q_No of Consider_Ideal answers")
+
+    sh_consider_input.Activate
+    With Columns("A")
+        .Find(what:="Ideal employers", after:=.Cells(7, 1), LookIn:=xlFormulas).Select  ''' first non blank cell in the range
+        no_employer = Application.Selection.Row
+        no_employer = no_employer - 7
+    End With
+
+    lCol = Cells(6, Columns.Count).End(xlToLeft).Column
+
+    no_mfos = lCol - 3
+
+    '''''''consider sum
+    sh_consider_input.Range("M7").Formula = "=sum(D7:D" & (no_employer + 6) & ")"
+    sh_consider_input.Range("M7").Copy
+    sh_consider_input.Range(Cells(7, 14), Cells(7, 14 + no_mfos - 2)).PasteSpecial
+
+    '''''''Ideal sum
+    sh_consider_input.Range("M8").Formula = "=sum(D" & no_employer + 7 & ":D" & (no_employer + no_employer + 6) & ")"
+    sh_consider_input.Range("M8").Copy
+    sh_consider_input.Range(Cells(8, 14), Cells(8, 14 + no_mfos - 2)).PasteSpecial
+
+''''''''''''''''' paste to output consider / Ideal'''''''''''''''''
+
+    sh2.Range("A1").AutoFilter Field:=3, Criteria1:=Array("No of considered employers", "No of evaluations", "No of considered employers/respondent", "No of evaluations/respondent"), Operator:=xlFilterValues
+
+    sh2.Range("A1").AutoFilter Field:=5, Criteria1:="<>ALL MFOS"
+    sh2.Range(sh2.Cells(1, 1), sh2.Cells(uni_number, 5)).SpecialCells(xlCellTypeVisible).Copy
+    sh_consider_output.Cells(1, 1).PasteSpecial Paste:=xlPasteValues '''paste precode
+    sh2.AutoFilterMode = False
+    wb.Save
+
+
+''''''''''''''''''''''''''''''''''''''
+
+Dim cellno As Integer
+cellno = 2
+    For mfs = 1 To no_mfos
+        sh_consider_input.Activate
+        sh_consider_input.Range(Cells(7, 12 + mfs), Cells(8, 12 + mfs)).Copy
+        
+        sh_consider_output.Activate
+        sh_consider_output.Cells(cellno, 8).PasteSpecial Paste:=xlPasteValues
+        cellno = cellno + 2
+        
+        sh_Q_consider_input.Activate
+        sh_Q_consider_input.Range(Cells(7, 3 + mfs), Cells(8, 3 + mfs)).Copy
+        
+        sh_consider_output.Activate
+        sh_consider_output.Cells(cellno, 8).PasteSpecial Paste:=xlPasteValues
+        cellno = cellno + 2
+    Next
+
+wb.Save
+    precode_number3 = sh_consider_output.Range("A2").End(xlDown).Row
+
+    sh_consider_output.Range("J2").Formula = "=(H2=B2)"
+    sh_consider_output.Range("J2").Copy
+    sh_consider_output.Range("J3:J" & precode_number3).PasteSpecial
+    sh_consider_output.Range("J1").Formula = "=COUNTIF(J2:J" & precode_number3 & ",""FALSE"")"
+
+wb.Save
+''''''''''''''''''''''''''''' The End ''''''''''''''''''''''''''''''''
+    Set objAD = CreateObject("ADSystemInfo")
+    Set objUser = GetObject("LDAP://" & objAD.UserName)
+    MsgBox "Thanks! " & objUser.DisplayName
+End Sub
+
+
+
+
+

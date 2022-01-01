@@ -1,0 +1,141 @@
+
+Sub TextFonts()
+
+    Dim pPath As String
+    Dim pCount, counter, counter2 As Integer
+    Dim pPowerPoint As New PowerPoint.Application
+    Dim pPresentation As PowerPoint.Presentation
+    Dim wb1 As Workbook
+    Dim sh2 As Worksheet
+    
+''    Dim OWB As Excel.Workbook
+''    Set OWB = Workbooks.Add
+
+    
+    
+    Dim mypath As String
+    
+    Application.DisplayAlerts = False
+     pPath = Application.Workbooks("Macro_color.xlsm").Worksheets("Sheet1").Range("F3").Value
+     mypath = Application.Workbooks("Macro_color.xlsm").Path
+         
+    counter = 1
+    counter2 = 1
+    pPowerPoint.Visible = msoTrue
+    Set pPresentation = pPowerPoint.Presentations.Open(mypath & "\" & pPath)
+    mypath = pPresentation.Path
+    Dim oSl, myDocument As Slide
+    Dim oSh As Shape
+    Dim sFontName, sFontsOnSlide As String
+    sFontName = "Times New Roman"
+     sFontsOnSlide = ""
+ ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'
+     Set sh2 = Application.Workbooks("Scorecard.xlsx").Worksheets("Sheet1")
+    
+        Dim cColor, cRed, cGreen, cBlue
+    
+    'Get Cell background color VBA Value. Convert this Color Value to RGB Value
+    cColor = sh2.Cells(6, 3).Interior.Color
+    
+    'Convert Color Code to RGB
+    cRed = (cColor Mod 256)
+    cGreen = (cColor \ 256) Mod 256
+    cBlue = (cColor \ 65536) Mod 256
+    Debug.Print cColor & "; " & VBA.rgb(cRed, cGreen, cBlue)
+     
+    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+        For Each oPPTShape In pPresentation.Slides(2).Shapes
+                       If oPPTShape.HasTextFrame Then
+                           If oPPTShape.TextFrame.HasText Then
+                                    oPPTShape.Fill.ForeColor.rgb = VBA.rgb(cRed, cGreen, cBlue)
+                           End If
+                       End If
+
+        Next
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'
+'For Each oSh In ActiveWindow.Selection.ShapeRange
+'    If oSh.HasTextFrame Then
+'       Debug.Print oSh.TextFrame.TextRange.Text
+'    End If
+'Next
+
+'pPresentation.Slides(1).Shapes().Fill.ForeColor.RGB = RGB(255, 0, 0)
+'Debug.Print pPresentation.Slides(1).Shapes.Count
+
+'    For Each oLayout In pPresentation.SlideMaster.CustomLayouts
+'       sFontsOnSlide = ""
+'       For Each aShape In oLayout.Shapes
+'         If aShape.TextFrame.HasText Then
+'           sFontsOnSlide = sFontsOnSlide & aShape.TextFrame.TextRange.Font.Name & ", "
+'         End If
+'       Next aShape
+'
+'        Debug.Print oLayout.Name
+'
+' Next oLayout
+'
+
+
+        
+        'pPresentation.Slides(1).Shapes.SelectAll
+     
+''     Debug.Print "Slide: " & oPPTSlide.SlideNumber & sFontsOnSlide
+
+''     OWB.Worksheets(1).Range("A" & counter).Value = "Slide: " & oPPTSlide.SlideNumber & sFontsOnSlide
+''     counter = counter + 1
+
+   
+''    For Each oLayout In pPresentation.SlideMaster.CustomLayouts
+''       sFontsOnSlide = ""
+''       For Each aShape In oLayout.Shapes
+''         If aShape.TextFrame.HasText Then
+''           sFontsOnSlide = sFontsOnSlide & aShape.TextFrame.TextRange.Font.Name & ", "
+''         End If
+''       Next aShape
+''
+''        OWB.Worksheets(2).Range("A" & counter2).Value = "Layout: " & oLayout.Name & sFontsOnSlide
+''       counter2 = counter2 + 1
+''    Next oLayout
+''
+''Application.DisplayAlerts = False
+''
+''OWB.SaveAs mypath & "\" & "abc2.xlsx"
+'' OWB.Close
+''
+''''''''''''''''''''''''''''''' The End ''''''''''''''''''''''''''''''''
+''
+''    MsgBox "Thanks! "
+
+End Sub
+

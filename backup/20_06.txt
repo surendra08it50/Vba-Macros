@@ -1,0 +1,83 @@
+
+
+Sub CheckFonts_2()
+ Dim aTF As TextFrame, aShape As Shape, aSlide As Slide, oLayout As CustomLayout
+ Dim sFontsOnSlide As String
+ '''''''''''''''''''''''''''''''''''''''''''
+     Dim pPath As String
+    Dim pCount As Integer
+    Dim pPowerPoint As New PowerPoint.Application
+    Dim pPresentation As PowerPoint.Presentation
+
+    pPath = "T:\Universum Research\2019\Training\Surendra\abhi\ITSS 2019 University Report - All Students - Test report.pptx" 'For example
+    Set pPresentation = pPowerPoint.Presentations.Open(pPath)
+
+   
+     Dim mypath As String
+     Dim counter, counter2 As Integer
+    mypath = pPresentation.Path
+    
+    counter = 1
+    counter2 = 1
+    
+    Dim OWB As Excel.Workbook
+    Set OWB = Workbooks.Add
+
+
+''''''''''''''''''''''''''''''
+    Dim oSl As Slide
+    Dim oSh As Shape
+    Dim sFontName As String
+    sFontsOnSlide = ""
+    
+'    With pPresentation
+'        For Each oSl In .Slides
+'            For Each oSh In oSl.Shapes
+'                With oSh
+'                    If .HasTextFrame Then
+'                        If .TextFrame.HasText Then
+'                           sFontsOnSlide = sFontsOnSlide & oSh.TextFrame.TextRange.Font.Name & ", "
+'                        End If
+'                    End If
+'                End With
+'            Next
+'            Debug.Print "Slide: " & oSl.SlideNumber & "::::" & oSh.TextFrame.TextRange.Font.Name
+'        Next
+'    End With
+'
+
+' For Each aSlide In pPresentation.Slides
+ 
+
+'   sFontsOnSlide = ""
+'   For Each aShape In aSlide.Shapes
+'     If aShape.TextFrame.HasText Then
+'       sFontsOnSlide = sFontsOnSlide & aShape.TextFrame.TextRange.Font.Name & ", "
+'     End If
+'   Next aShape
+'    '''''   'Debug.Print "Slide: " & aSlide.SlideNumber, sFontsOnSlide
+'
+'     OWB.Worksheets(1).Range("A" & counter).Value = "Slide: " & aSlide.SlideNumber & sFontsOnSlide
+'
+'   counter = counter + 1
+   
+' Next aSlide
+
+' For Each oLayout In ActivePresentation.SlideMaster.CustomLayouts
+'   sFontsOnSlide = ""
+'   For Each aShape In oLayout.Shapes
+'     If aShape.TextFrame.HasText Then
+'       sFontsOnSlide = sFontsOnSlide & aShape.TextFrame.TextRange.Font.Name & ", "
+'     End If
+'   Next aShape
+'''   'Debug.Print "Layout: " & oLayout.Name, sFontsOnSlide
+'
+'    OWB.Worksheets(2).Range("A" & counter2).Value = "Layout: " & oLayout.Name & sFontsOnSlide
+'   counter2 = counter2 + 1
+' Next oLayout
+'
+'
+' OWB.SaveAs mypath & "\" & "abc2.xlsx"
+' OWB.Close
+
+End Sub

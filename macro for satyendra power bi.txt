@@ -1,0 +1,64 @@
+Sub grid()
+
+
+Dim sh2 As Worksheet
+Dim sh3 As Worksheet
+Dim sh4 As Worksheet
+
+
+Set sh2 = Application.ThisWorkbook.Worksheets("Sheet2")
+Set sh3 = Application.ThisWorkbook.Worksheets("Sheet3")
+
+sh2.Activate
+col_len = Cells(1, Columns.Count).End(xlToLeft).Column
+
+For i = 1 To col_len
+    
+    sh2.Activate
+    Cells(Rows.Count, i).End(xlUp).Select
+    Range(Selection, Cells(1, i)).Select
+    Selection.Copy
+    
+    
+    Set sh4 = Sheets.Add(After:=Sheets(Sheets.Count))
+    sh4.Activate
+    Cells(2, 1).PasteSpecial Paste:=xlPasteValues
+    Application.CutCopyMode = False
+    Range("B3").Formula = "=VLOOKUP(A3,Sheet3!$A:$B,2,0)"
+    
+    Range("B3").Copy
+    Cells(Rows.Count, 1).End(xlUp).Select
+    Range(Selection.Offset(, 1), Cells(4, 2)).Select
+    
+    Selection.PasteSpecial Paste:=xlPasteFormulas
+    Application.CutCopyMode = False
+    
+    '''''''''''''''''''''''''''''''''''''''''''''''''
+    sh3.Activate
+    Range("B2").Select
+    Range(Selection, Cells(2, 2).End(xlDown)).Select
+    Selection.Copy
+    
+    sh4.Activate
+    Range("C2").PasteSpecial Transpose:=True
+    Application.CutCopyMode = False
+    
+    Range("C1").Formula = "=$A$2 & ""_"" & C2"
+    lCol = Cells(2, Columns.Count).End(xlToLeft).Column
+    lRow = Cells(Rows.Count, 1).End(xlUp).Row
+    
+    Cells(1, 3).Copy
+    Range(Cells(1, 4), Cells(1, lCol)).PasteSpecial Paste:=xlPasteFormulas
+    Application.CutCopyMode = False
+    
+    Range("C3").Formula = "=IF(C$2=$B3,1,0)"
+    
+    Range("C3").Copy
+    Range(Cells(3, 3), Cells(lRow, lCol)).PasteSpecial Paste:=xlPasteFormulas
+    Application.CutCopyMode = False
+    
+    
+    sh4.Name = Range("A2").Value
+Next
+
+End Sub

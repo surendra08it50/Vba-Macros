@@ -1,0 +1,118 @@
+BASICS	YES
+RANGES AND CELLS	YES
+ROWS & COLUMNS	YES
+Sheets
+WORKBOOKS	YES
+Files
+TEXTS and STRINGS
+sorting , filter
+Form
+
+
+
+ 
+BASICS	YES
+Guide to Loops - Fors, Dos and More	
+If, If-Else, And, Or	
+Select Case	
+Cut, Copy, Paste from a Macro	
+VBA Error Handling	
+Save File
+Set Cell Formula	
+RANGES AND CELLS	YES
+Ranges + Cells Overview	
+Get / Set Cell Values	
+Select Range	
+Offset Range or Cell	
+Select All Cells	
+Union and Intersect	
+Resize Range	
+Get the active cell's Column	
+Change Cell Font Properties	
+Clear Cells	
+Test if Selection is Range	
+Merge Cells	
+Bold Text in a Cell	
+Wrap Text	
+Range Address	
+Finding the Maximum Value in Each Column in a Range	
+Delete All Named Ranges	
+Highlight Duplicates in a Range	
+Join Multiple Ranges	
+Remove Formatting For Each Cell In Range	
+Size an Object to a Range Size	
+Change a Cells Background Color	
+Return Column Letter of Cell	
+Determine Start and End Column of a Merged Cell	
+Macro to Autofill	
+Sum by Color	
+ROWS & COLUMNS	YES
+Delete Entire Rows or Columns	
+Delete Rows that Meet Certain Criteria in VBA	
+Insert Rows or Columns	
+Selecting Every 5th Row	
+Remove Blank Rows	
+Row Height - Column Width	
+Count the rows in a Selection	
+Count the Number of Used Rows	
+Autofit Columns	
+Select Non Contiguous Columns	
+SHEETS	YES
+Ultimate Guide to Worksheets	
+Activate, Select Sheet and Working with ActiveSheet	
+Add / Insert Worksheet	
+Copy Worksheet	
+Hide / Unhide Worksheets	
+Delete or Clear Worksheet	
+Get Sheet Name / Rename Sheet	
+Unprotect / Protect Worksheets	
+Macro to List all Sheets in a Workbook	
+Count the sheets in a Workbook	
+Hide WorkSheet Tabs	
+Unhide All Worksheets	
+Clear Entire Sheet	
+Macro to Create a Hyperlink Menu of Worksheets	
+Macro to Update all Worksheets in Workbook	
+Set the Default Sheet When a WorkBook Opens	
+WORKBOOKS	YES
+Create New Workbook	
+Open / Close Workbook	
+Merge Workbooks	
+FILES	YES
+List of all files contained within a Directory	
+List Files in Folder	
+Export Range to Delimited Text File	
+Delete files from the hard drive	
+Convert Excel to CSV (Comma Delimited Text File)	
+VBA - Test if Workbook is Open by Workbook Name	
+Validate Filenames	
+File Exists	
+Copy File	
+Delete File	
+Rename File	
+Open File Dialog	
+TEXT AND STRINGS	YES
+Text Strings and Substrings Functions	
+Extract Number From String	
+Find the nth Word in a String	
+Concatenate Text(&)	
+New Line / Carriage Return	
+VBA and Vlookup: Find occurence of string	
+VBA Function To Calculate Number of Words in a String	
+Subroutine to Reverse a String	
+Remove Characters from Left or Right Side of Variable Length String	
+Loop Through a String	
+Add Spaces to a String - Space()	
+Find Text in a String (instr)	
+Force Proper, Upper, or Lower case automatically	
+Char / Chr Function	
+Upper, Lower, and Proper Case - Case Functions	
+Prevent VBA Case Sensitive	
+Like Operator	
+Is Operator	
+Logical Operators	
+Comparison Operators - Not Equal To and More	
+Compare Strings (StrComp)	
+Convert Text to Number	
+Convert Number to Text	
+Split String into Cells	

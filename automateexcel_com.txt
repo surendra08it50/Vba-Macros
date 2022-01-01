@@ -1,0 +1,2675 @@
+https://www.automateexcel.com/vba-code-examples/
+'''*************************************************************
+'''''   BASICS
+'''***********************************************************
+
+Sub LoopThroughSheets()
+Dim ws As Worksheet
+ 
+    For Each ws In Worksheets
+        'ws.Visible = True
+        Debug.Print ws.Name
+    Next
+ 
+End Sub
+
+
+Sub If_Loop()
+Dim cell As Range
+ 
+  For Each cell In Range("A2:A6")
+    If cell.Value > 0 Then
+      cell.Offset(0, 1).Value = "Positive"
+    ElseIf cell.Value < 0 Then
+      cell.Offset(0, 1).Value = "Negative"
+    Else
+      cell.Offset(0, 1).Value = "Zero"
+     End If
+  Next cell
+ 
+End Sub
+
+
+
+Sub ForLoop()
+    Dim I As Integer
+    For I = 1 To 10
+        MsgBox I
+    Next I
+End Sub
+
+Sub DoWhileLoop()
+    Dim n As Integer
+    n = 1
+    Do While n < 11
+        MsgBox n
+        n = n + 1
+    Loop
+End Sub
+
+Sub DoUntilLoop()
+    Dim n As Integer
+    n = 1
+    Do Until n >= 10
+        MsgBox n
+        n = n + 1
+    Loop
+End Sub
+
+Sub doUntil1()
+'Colors the empty cells yellow, until a non-empty cell is encountered. If the first cell is not empty, the code will not execute because the condition of "Not Empty" is mentioned at the start of the loop.
+
+
+Dim rowNo As Integer
+
+rowNo = 1
+
+Do Until Not IsEmpty(Cells(rowNo, 1))
+
+    Cells(rowNo, 1).Interior.Color = RGB(255, 255, 0)
+    rowNo = rowNo + 1
+
+Loop
+
+End Sub
+
+Sub doUntil1_2()
+'Colors the non empty cells yellow, until a empty cell is encountered. If the first cell is not empty, the code will not execute because the condition of "Not Empty" is mentioned at the start of the loop.
+
+
+Dim rowNo As Integer
+
+rowNo = 1
+
+Do Until IsEmpty(Cells(rowNo, 2))
+
+    Cells(rowNo, 2).Interior.Color = RGB(255, 255, 0)
+    rowNo = rowNo + 1
+
+Loop
+
+End Sub
+
+
+
+Sub ForEach_CountTo10_Even()
+ 
+Dim n As Integer
+For n = 2 To 10 Step 2
+    MsgBox n
+Next n
+ 
+End Sub
+
+
+Sub ForEach_Countdown_Inverse()
+ 
+Dim n As Integer
+For n = 10 To 1 Step -1
+    MsgBox n
+Next n
+MsgBox "Lift Off"
+ 
+End Sub
+
+
+
+Sub ForEach_DeleteRows_BlankCells()
+ 
+Dim n As Integer
+For n = 10 To 1 Step -1
+    If Range("a" & n).Value = "" Then
+        Range("a" & n).EntireRow.Delete
+    End If
+Next n
+ 
+End Sub
+
+
+Sub Nested_ForEach_MultiplicationTable()
+ 
+Dim row As Integer, col As Integer
+ 
+For row = 1 To 9
+    For col = 1 To 9
+        Cells(row + 1, col + 1).Value = row * col
+    Next col
+Next row
+ 
+End Sub
+
+
+
+Sub ExitFor_Loop()
+ 
+Dim I As Integer
+ 
+For I = 1 To 1000
+    If Range("A" & I).Value = "error" Then
+        Range("A" & I).Select
+        MsgBox "Error Found"
+        Exit For
+    End If
+Next I
+ 
+End Sub
+
+
+Sub ForEachCell_inRange()
+ 
+Dim cell As Range
+ 
+For Each cell In Range("a1:a10")
+    cell.Value = cell.Offset(0, 1).Value
+Next cell
+ 
+End Sub
+
+Sub ForEachSheet_inWorkbook()
+ 
+Dim ws As Worksheet
+ 
+For Each ws In Worksheets
+    ws.Unprotect "password"
+Next ws
+ 
+End Sub
+
+
+Sub ForEachWB_inWorkbooks()
+ 
+Dim wb As Workbook
+ 
+For Each wb In Workbooks
+    wb.Close savechanges:=True
+Next wb
+ 
+End Sub
+
+Sub ForEachCell_inRange_22()
+ 
+Dim cell As Range
+ 
+For Each cell In Range("a1:a10")
+    If cell.Value = "" Then _
+       cell.EntireRow.Hidden = True
+Next cell
+ 
+End Sub
+
+''Loop Through Rows
+''This will loop through all the rows in a column:
+
+
+Public Sub LoopThroughRows()
+ 
+Dim cell As Range
+ 
+For Each cell In Range("A:A")
+    If cell.Value <> "" Then MsgBox cell.Address & ": " & cell.Value
+Next cell
+ 
+End Sub
+
+'''''Loop Through Columns
+''This will loop through all columns in a row:
+
+Public Sub LoopThroughColumns()
+ 
+Dim cell As Range
+ 
+For Each cell In Range("1:1")
+    If cell.Value <> "" Then MsgBox cell.Address & ": " & cell.Value
+Next cell
+ 
+End Sub
+
+Sub LoopThroughFiles()
+ 
+Dim oFSO As Object
+Dim oFolder As Object
+Dim oFile As Object
+Dim I As Integer
+ 
+Set oFSO = CreateObject("Scripting.FileSystemObject")
+ 
+ Set oFolder = oFSO.GetFolder("C:\Demo")
+ 
+I = 2
+ 
+For Each oFile In oFolder.Files
+    Range("A" & I).Value = oFile.Name
+    I = I + 1
+Next oFile
+ 
+End Sub
+
+
+
+'''Loop Through Array
+''This code will loop through the array ‘arrList’:
+Sub loop_array()
+
+
+For I = LBound(arrList) To UBound(arrList)
+    MsgBox arrList(I)
+Next I
+
+
+End Sub
+
+'''''''''''''''''''''select case
+
+Sub Select_Case_Yes_No_Cancel()
+    Dim nResult As VbMsgBoxResult
+    
+    nResult = MsgBox("...", vbYesNoCancel)
+    
+    Select Case nResult
+        Case vbYes
+            MsgBox "Yes"
+        Case vbNo
+            MsgBox "No"
+        Case vbCancel
+            MsgBox "Cancel"
+    End Select
+End Sub
+
+Sub ExactMatch_Numbers()
+    Dim n As Integer
+    n = CInt(InputBox("..."))
+    
+    Select Case n
+        Case 10
+            ' If n is 10 Then
+        Case 20, 30, 40
+            ' If n is 20/30/40 Then
+        Case Else
+            ' If n is not 10/20/30/40 Then
+    End Select
+    
+End Sub
+
+
+Sub Calc_Grade()
+Dim Score       As Integer
+Dim LetterGrade As String
+ 
+    Score = InputBox("Enter Student Score")
+    
+    Select Case Score
+        Case 90 To 100
+            LetterGrade = "A"
+        Case 80 To 90
+            LetterGrade = "B"
+        Case 70 To 80
+            LetterGrade = "C"
+        Case 60 To 70
+            LetterGrade = "D"
+        Case Else
+            LetterGrade = "F"
+    End Select
+    
+    MsgBox "The Student's Grade is: " & LetterGrade
+    
+End Sub
+
+
+Sub ExactMatch_Food()
+ 
+Select Case Range("a1").Value
+    Case "Beets"
+        MsgBox "Vegetable"
+    Case "Apple", "Banana", "Orange"
+        MsgBox "Fruit"
+End Select
+ 
+End Sub
+
+
+
+''''''''''''''''''''''''''''COPY CUT PASTE'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Sub Paste_OneCell()
+ 
+    'Copy and Paste Single Cell
+    Range("A1").Copy Range("B1")
+ 
+    'Cut and Paste Single Cell
+    Range("A1").Cut Range("B1")
+ 
+End Sub
+
+
+Sub CopySelection()
+ 
+'Paste to a Defined Range
+Selection.Copy Range("b1")
+ 
+'Offset Paste (offsets 2 cells down and 1 to the right
+Selection.Copy
+Selection.Offset(2, 1).Paste
+ 
+Application.CutCopyMode = False
+ 
+End Sub
+
+Sub Paste_Range()
+ 
+    'Copy and Paste a Range of Cells
+    Range("A1:A3").Copy Range("B1:B3")
+ 
+    'Cut and Paste a Range of Cells
+    Range("A1:A3").Cut Range("B1:B3")
+ 
+End Sub
+
+Sub PasteOneColumn()
+ 
+    'Copy and Paste Column
+    Range("A:A").Copy Range("B:B")
+ 
+ 
+    'Cut and Paste Column
+    Range("A:A").Cut Range("B:B")
+ 
+End Sub
+
+Sub Paste_OneRow()
+ 
+    'Copy and Paste Row
+    Range("1:1").Copy Range("2:2")
+ 
+ 
+    'Cut and Paste Row
+    Range("1:1").Cut Range("2:2")
+ 
+End Sub
+Sub Paste_Other_Sheet_or_Book()
+ 
+    'Cut or Copy and Paste to another worksheet
+    Worksheets("sheet1").Range("A1").Copy Worksheets("sheet2").Range("B1") 'Copy
+    Worksheets("sheet1").Range("A1").Cut Worksheets("sheet2").Range("B1") 'Cut
+ 
+    'Cut or Copy and Paste to another workbook
+    Workbooks("book1.xlsm").Worksheets("sheet1").Range("A1").Copy _
+    Workbooks("book2.xlsm").Worksheets("sheet1").Range("B1") 'Copy
+    Workbooks("book1.xlsm").Worksheets("sheet1").Range("A1").Cut _
+    Workbooks("book2.xlsm").Worksheets("sheet1").Range("B1") 'Cut
+ 
+    Application.CutCopyMode = False
+End Sub
+
+    
+Sub PasteSpecial()
+ 
+    'Perform one Paste Special Operation:
+    Range("A1").Copy
+    'Paste Formats
+    Range("B1").PasteSpecial Paste:=xlPasteFormats
+    'Paste Column Widths
+    Range("B1").PasteSpecial Paste:=xlPasteColumnWidths
+    'Paste Formulas
+    Range("B1").PasteSpecial Paste:=xlPasteFormulas
+ 
+    'Perform Multiple Paste Special Operations at Once:
+    Range("A1").Copy
+    'Paste Formats and Transpose
+    Range("B1").PasteSpecial Paste:=xlPasteFormats, Operation:=xlNone, SkipBlanks:= _
+        False, Transpose:=True
+ 
+    Application.CutCopyMode = False
+End Sub
+
+''''''''''''''''''''''' SAVE files'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''Save all open workbooks
+Sub save_files()
+
+
+
+Dim wb As Workbook
+ 
+For Each wb In Application.Workbooks
+    wb.Save
+Next wb
+
+''''''''''''''''''''''
+'Dim wb As Workbook
+'
+'For Each wb In Application.Workbooks
+'    If not wb ReadOnly then
+'        wb.Save
+'    End If
+'Next wb
+
+''''''''''''''''''''
+Set wb = Workbooks("savefile.xlsm")
+wb.Save
+''''''''''''''''''''''''
+
+Dim wbstring As String
+ 
+wbstring = "savefile.xlsm"
+Workbooks(wbstring).Save
+'''''''''''''''''''''''''''''''''''''''''''''
+
+ActiveWorkbook.SaveAs Filename:="new"
+ActiveWorkbook.SaveAs "new"
+
+
+''''''''''''''''''''''''''''
+Dim wbstring As String
+ 
+wbstring = "new"
+ActiveWorkbook.SaveAs Filename:=wbstring
+
+''''''''''''''''''''''''''''''''''''''''''''''
+
+ActiveWorkbook.SaveAs Filename:="C:\new"
+
+''''''''''''''''''''''''''''''''''''''''''
+
+ActiveWorkbook.SaveAs Filename:="C:\new.xlsx"
+
+''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+.xlsx = 51 '(52 for Mac)
+.xlsm = 52 '(53 for Mac)
+.xlsb = 50 '(51 for Mac)
+.xls = 56 '(57 for Mac)
+
+ActiveWorkbook.SaveAs Filename:="C:\new", FileFormat:=51
+
+''''''''''''''''''''''''''''''''''''''''''''''''
+ActiveWorkbook.SaveAs Filename:="C:\new.xlsx", Password:="password"
+
+ActiveWorkbook.SaveAs Filename:="C:\new.xlsx", WriteRes:="password"
+''''''''''''''''''''''''''''''''''''''''''''''''''
+ActiveWorkbook.SaveAs Filename:="C:\new.xlsx", ReadOnlyRecommended:=True
+'''''''''''''''''''''''''''''''''''''
+
+''Create Save As Dialog Box
+''This Generates the Save As Dialog Box, prompting the user to Save the file.
+''Keep in mind that this simple code may not be appropriate in all cases.
+
+Application.GetSaveAsFilename
+
+Application.GetSaveAsFilename InitialFileName:="test.xlsx"
+''''''''''''''''''''''''''''''''''''''''''''''
+
+Dim wb As Workbook
+ 
+Set wb = Workbooks.Add
+Application.DisplayAlerts = False
+wb.SaveAs Filename:=”c:\Test1.xlsx”
+Application.DisplayAlerts = True
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''' FORMULA in VBA''''''''''''''''''''''''''''''''''''''''''''
+
+Sub Formula_Example()
+ 
+    'Assign a hard-coded formula to a single cell
+    Range("b3").Formula = "=b1+b2"
+    
+    'Assign a flexible formula to a range of cells
+    Range("d1:d100").FormulaR1C1 = "=RC2+RC3"
+ 
+End Sub
+
+
+End Sub
+
+Sub FormulaR1C1_Examples()
+ 
+    'Reference D5 (Absolute)
+    '=$D$5
+    Range("a1").FormulaR1C1 = "=R5C4"
+    
+    'Reference D5 (Relative) from cell A1
+    '=D5
+    Range("a1").FormulaR1C1 = "=R[4]C[3]"
+    
+    'Reference D5 (Absolute Row, Relative Column) from cell A1
+    '=D$5
+    Range("a1").FormulaR1C1 = "=R5C[3]"
+    
+    'Reference D5 (Relative Row, Absolute Column) from cell A1
+    '=$D5
+    Range("a1").FormulaR1C1 = "=R[4]C4"
+ 
+End Sub
+
+Sub MoreFormulaExamples()
+' Alternate ways to add SUM formula
+' to cell B1
+'
+  Dim strFormula As String
+  Dim cell As Range
+  Dim fromRow As Range, toRow As Range
+ 
+  Set cell = Range("B1")
+ 
+  ' Directly assigning a String
+  cell.Formula = "=SUM(A1:A10)"
+ 
+  ' Storing string to a variable
+  ' and assigning to "Formula" property
+  strFormula = "=SUM(A1:A10)"
+  cell.Formula = strFormula
+ 
+  ' Using variables to build a string
+  ' and assigning it to "Formula" property
+  fromRow = 1
+  toRow = 10
+  strFormula = "=SUM(A" & fromValue & ":A" & toValue & ")"
+  cell.Formula = strFormula
+End Sub
+
+'''''''''''''''''''To refresh single formula, range, or entire worksheet use .Calculate instead:
+
+Sheets("Sheet1").Range("a1:a10").Calculate
+
+
+'''*************************************************************
+'''''   RANGES AND CELLS
+'''***********************************************************
+
+
+' Refer to cell B4 on the currently active sheet
+MsgBox Range("B4")
+ 
+' Refer to cell B4 on the sheet named 'Data'
+MsgBox Worksheets("Data").Range("B4")
+ 
+' Refer to cell B4 on the sheet named 'Data' in another OPEN workbook
+' named 'My Data'
+MsgBox Workbooks("My Data").Worksheets("Data").Range("B4")
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+' Store F5 in cell with Address F6
+Range("F6") = "F6"
+ 
+' Store E6 in cell with Address R[6]C[5] i.e E6
+Cells(6, 5) = "E6"
+ 
+' Store A1:D10 in the range A1:D10
+Range("A1:D10") = "A1:D10"
+' or
+Range(Cells(1, 1), Cells(10, 4)) = "A1:D10"
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Dim val1
+Dim val2
+ 
+' Read from cell F6
+val1 = Range("F6")
+ 
+' Read from cell E6
+val2 = Cells(6, 5)
+ 
+MsgBox val1
+MsgBox val2
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+' Store 10 in cells A1, A3, and A5
+Range("A1,A3,A5") = 10
+ 
+ 
+' Store 10 in cells A1:A3 and D1:D3)
+Range("A1:A3, D1:D3") = 10
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+' Store 'Col D' in D1:D10
+' which is Common between A1:D10 and D1:F10
+Range("A1:D10 D1:G10") = "Col D"
+
+'''''''''''''''''''''''''''''''''''''''''''''
+'''Offset from a cell
+
+' OFFSET from a cell A1
+' Refer to cell itself
+' Move 0 rows and 0 columns
+Range("A1").Offset(0, 0) = "A1"
+ 
+' Move 1 rows and 0 columns
+Range("A1").Offset(1, 0) = "A2"
+ 
+' Move 0 rows and 1 columns
+Range("A1").Offset(0, 1) = "B1"
+ 
+' Move 1 rows and 1 columns
+Range("A1").Offset(1, 1) = "B2"
+ 
+' Move 10 rows and 5 columns
+Range("A1").Offset(10, 5) = "F11"
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+''Offset from a Range
+
+' Move Reference to Range A1:D4 by 4 rows and 4 columns
+' New Reference is E5:H8
+Range("A1:D4").Offset(4, 4) = "E5:H8"
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+' Declare a Range variable
+Dim myRange As Range
+ 
+' Set the variable to the range A1:D4
+Set myRange = Range("A1:D4")
+ 
+' Prints $A$1:$D$4
+MsgBox myRange.Address
+
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+''Resize a Range
+''Resize method of Range object changes the dimension of the reference range:
+
+
+Dim myRange As Range
+ 
+' Range to Resize
+Set myRange = Range("A1:F4")
+ 
+' Prints $A$1:$E$10
+Debug.Print myRange.Resize(10, 5).Address
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+' Clear All Cells in Worksheets
+Cells.Clear
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+''UsedRange
+''UsedRange property gives you the rectangular range from the top-left cell used cell to the right-bottom used cell of the active sheet.
+
+Dim ws As Worksheet
+Set ws = ActiveSheet
+ 
+' $B$2:$L$14 if L2 is the first cell with any value
+' and L14 is the last cell with any value on the
+' active sheet
+Debug.Print ws.UsedRange.Address
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''
+''CurrentRegion
+''CurrentRegion property gives you the contiguous rectangular range from the top-left cell to the right-bottom used cell containing the referenced cell/range.
+
+Dim myRange As Range
+ 
+Set myRange = Range("D4:F6")
+ 
+' Prints $B$2:$L$14
+' If there is a filled path from D4:F16 to B2 AND L14
+Debug.Print myRange.CurrentRegion.Address
+ 
+' You can refer to a single starting cell also
+ 
+Set myRange = Range("D4") ' Prints $B$2:$L$14
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+'''Range Properties
+'''You can get Address, row/column number of a cell, and number of rows/columns in a range as given below:
+
+Dim myRange As Range
+ 
+Set myRange = Range("A1:F10")
+ 
+' Prints $A$1:$F$10
+Debug.Print myRange.Address
+ 
+Set myRange = Range("F10")
+ 
+' Prints 10 for Row 10
+Debug.Print myRange.row
+ 
+' Prints 6 for Column F
+Debug.Print myRange.Column
+ 
+Set myRange = Range("E1:F5")
+' Prints 5 for number of Rows in range
+Debug.Print myRange.Rows.Count
+ 
+' Prints 2 for number of Columns in range
+Debug.Print myRange.Columns.Count
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''Last Cell in Sheet
+''You can use Rows.Count and Columns.Count properties with Cells object to get the last cell on the sheet:
+
+
+' Print the last row number
+' Prints 1048576
+Debug.Print "Rows in the sheet: " & Rows.Count
+ 
+' Print the last column number
+' Prints 16384
+Debug.Print "Columns in the sheet: " & Columns.Count
+ 
+' Print the address of the last cell
+' Prints $XFD$1048576
+Debug.Print "Address of Last Cell in the sheet: " & Cells(Rows.Count, Columns.Count)
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+ 
+' Print the address of the last cell
+' Prints $XFD$1048576
+Debug.Print "Address of Last Cell in the sheet: " & Cells(Rows.Count, Columns.Count)
+''Last Used Row Number in a Column
+''END property takes you the last cell in the range, and End(xlUp) takes you up to the first used cell from that cell.
+
+Dim lastRow As Long
+ 
+lastRow = Cells(Rows.Count, "A").End(xlUp).row
+''Last Used Column Number in a Row
+
+Dim lastCol As Long
+ 
+lastCol = Cells(1, Columns.Count).End(xlToLeft).Column
+'END property takes you the last cell in the range, and End(xlToLeft) takes you left to the first used cell from that cell.
+'
+'You can also use xlDown and xlToRight properties to navigate to the first bottom or right used cells of the current cell.
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+cell Properties
+common Properties
+Here is code to display commonly used Cell Properties
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+Dim cell As Range
+Set cell = Range("A1")
+ 
+cell.Activate
+Debug.Print cell.Address
+' Print $A$1
+ 
+Debug.Print cell.Value
+' Prints 456
+' Address
+ 
+Debug.Print cell.Formula
+' Prints =SUM(C2:C3)
+ 
+' Comment
+Debug.Print cell.Comment.Text
+ 
+' Style
+Debug.Print cell.Style
+ 
+' Cell Format
+Debug.Print cell.DisplayFormat.NumberFormat
+cell Font
+''Cell.Font object contains properties of the Cell Font:
+
+Cells.Select
+Selection.ClearFormats
+
+Dim cell As Range
+ 
+Set cell = Range("A1")
+ 
+' Regular, Italic, Bold, and Bold Italic
+cell.Font.FontStyle = "Bold Italic"
+' Same as
+cell.Font.Bold = True
+cell.Font.Italic = True
+ 
+' Set font to Courier
+cell.Font.FontStyle = "Courier"
+ 
+' Set Font Color
+cell.Font.Color = vbBlue
+' or
+cell.Font.Color = RGB(255, 0, 0)
+ 
+' Set Font Size
+cell.Font.Size = 20
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+'''Copy and Paste
+Paste All
+'''Ranges/Cells can be copied and pasted from one location to another. The following code copies all the properties of source range to destination range (equivalent to CTRL-C and CTRL-V)
+
+'Simple Copy
+Range("A1:D20").Copy
+Worksheets("Sheet2").Range("B10").Paste
+ 
+'or
+' Copy from Current Sheet to sheet named 'Sheet2'
+Range("A1:D20").Copy Destination:=Worksheets("Sheet2").Range("B10")
+Paste Special
+''Selected properties of the source range can be copied to the destination by using PASTESPECIAL option:
+
+' Paste the range as Values only
+Range("A1:D20").Copy
+Worksheets("Sheet2").Range("B10").PasteSpecial Paste:=xlPasteValues
+'''''Here are the possible options for the Paste option:
+
+'' Paste Special Types
+xlPasteAll
+xlPasteAllExceptBorders
+xlPasteAllMergingConditionalFormats
+xlPasteAllUsingSourceTheme
+xlPasteColumnWidths
+xlPasteComments
+xlPasteFormats
+xlPasteFormulas
+xlPasteFormulasAndNumberFormats
+xlPasteValidation
+xlPasteValues
+xlPasteValuesAndNumberFormats
+AutoFit Contents
+'''Size of rows and columns can be changed to fit the contents using the code below:
+
+
+' Change size of rows 1 to 5 to fit contents
+Rows("1:5").AutoFit
+ 
+' Change size of Columns A to B to fit contents
+Columns("A:B").AutoFit
+
+''''''''''''''''''''' SORT ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+   Columns("A:C").Sort key1:=Range("C2"), _
+      order1:=xlAscending, Header:=xlYes
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+''''Sum Range
+SumOfRange = Application.WorksheetFunction.Sum(Range("A1:A10"))
+Debug.Print SumOfRange
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''Count Range
+
+' Count Number of Cells with Numbers in the Range
+CountOfCells = Application.WorksheetFunction.Count(Range("A1:A10"))
+Debug.Print CountOfCells
+ 
+' Count Number of Non Blank Cells in the Range
+CountOfNonBlankCells = Application.WorksheetFunction.CountA(Range("A1:A10"))
+Debug.Print CountOfNonBlankCells
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+'''Select a Single Cell Using VBA
+
+
+Range("A2").Select
+
+Cells(2, 1).Select
+
+'''''Select a Range of Cells
+
+Range("A1:C5").Select
+
+''Select a Range of Non-Contiguous Cells
+
+Range("A1, C1, E1").Select
+
+
+Range("A1:A9, B11:B18").Select
+
+'''''Select All the Cells in a Worksheet
+
+Cells.Select
+
+''''Select a Row
+Rows(1).Select
+
+'''''Select a Column
+Columns(3).Select
+
+'''Select the Last Non-Blank Cell in a Column
+
+Range("A1").End(xlDown).Select
+
+''''Select the Last Non-Blank Cell in a Row
+
+Range("A1").End(xlToRight).Select
+
+Range("A1").Offset(1, 1).Select
+
+Sub FormatSelection()
+Range("A1:C1").Select
+ 
+Selection.Font.Name = "Arial"
+Selection.Font.Bold = True
+Selection.Font.Italic = True
+Selection.Interior.Color = vbGreen
+ 
+End Sub
+
+'''Using the With…End With Construct
+
+Sub UsingWithEndWithSelection()
+Range("A1:C1").Select
+ 
+With Selection
+.Font.Name = "Arial"
+.Font.Bold = True
+.Font.Italic = True
+.Interior.Color = vbGreen
+End With
+ 
+End Sub
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Range("A1").Offset(1, 1).Select
+
+Range("A1:A5").Offset(7, 3).Select
+
+'''An example of selecting all cells on Sheet1 using the code name Sheet1:
+Sub MySelectAll()
+ 
+     Sheet1.Activate
+ 
+     Sheet1.Cells.Select
+ 
+End Sub
+
+
+''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Union(Range("A1:B4"), Range("B3:C6")).Select
+Intersect(Range("A1:B4"), Range("B3:C6")).Select
+
+'''''''''''''''''''''''''''''''''''''''''''''''''
+
+'''Resize Number Of Rows And Columns
+'''Following example expands the range with one cell A1 to range A1:D10 by increasing row count to 10 and columns count to 5.
+
+Range("A1").Resize(10, 5).Select
+
+''''''''''''''''''''''''''''''''''''''''''''
+
+ ' Resize range to the desired size and assign to a variable
+    Set newRng = ActiveSheet.Range("A1").Resize(10, 5)
+    
+
+    ' Change Row Size only, New Range will be $A$1:$A$10
+    Set newRng = Rng.Resize(10)
+
+    ' Change Column Size only, new Range will be $A$1:$E$1
+    Set newRng = Rng.Resize(, 5)
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''For the cell’s column:
+
+Public Sub ActiveColumn()
+    MsgBox ActiveCell.Column
+End Sub
+
+Public Sub ActiveRow()
+ MsgBox ActiveCell.row
+End Sub
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Range("a1").Font.Color = RGB(255, 255, 0)
+
+Range("a1").Font.Size = 16
+Range("A1").Font.Bold = True
+
+Range("A1").Font.Name = "Arial"
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+Range("a1").Clear
+
+
+Everything (.Clear)
+Comments (.ClearComments)
+Contents (.ClearContents)
+Formats (.ClearFormats)
+Hyperlinks (.ClearHyperlinks)
+Notes (.ClearNotes)
+Outline (.ClearOutline)
+
+
+Range("b2").ClearContents
+Selection.Clear
+
+Sub MergingCells()
+ 
+Range("A1:C1").Merge
+ 
+End Sub
+
+Sub UnmergeCells()
+ 
+Range("B1").UnMerge
+ 
+End Sub
+
+
+
+Sub MergeRows()
+ 
+Range("1:4").Merge
+ 
+End Sub
+
+
+Sub MergeColumns()
+ 
+Range("A:C").Merge
+ 
+End Sub
+
+Sub MergeandCenterContentsHorizontally()
+ 
+Range("A1:D1").Merge
+Range("A1:D1").HorizontalAlignment = xlCenter
+ 
+End Sub
+
+Sub MergeandCenterContentsVertically()
+ 
+Range("A1:A4").Merge
+Range("A1:D1").VerticalAlignment = xlCenter
+ 
+End Sub
+
+
+Sub MergeCellsAcross()
+ 
+Range("A1:D1").Merge Across:=True
+ 
+End Sub
+
+
+'''Wrapping Text
+Worksheets("Sheet1").Range("A1").WrapText = True
+
+Range("A1:A10").WrapText = True
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+MsgBox Cells(1, 1).Address
+MsgBox Range("A1").Address
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Cells(1, 1).Interior.ColorIndex = 15
+
+
+''''**********************************************************************
+''ROWS & COLUMNS
+''''******************************************************************
+
+Rows(1).Delete
+Range("a1").EntireRow.Delete
+
+Columns(1).Delete
+Range("a1").EntireColumn.Delete
+
+
+Rows("1:3").Delete
+Columns("A:C").Delete
+
+Range("a1:a10").EntireRow.Delete
+
+
+''Delete Blank / Empty Rows
+''This example will delete a row if the entire row is blank:
+
+
+Sub DeleteRows_EntireRowBlank()
+ 
+Dim cell As Range
+ 
+For Each cell In Range("b2:b20")
+    If Application.WorksheetFunction.CountA(cell.EntireRow) = 0 Then
+        cell.EntireRow.Delete
+    End If
+Next cell
+ 
+End Sub
+
+
+''Delete Row if Cell is Blank
+''This will delete a row if specific column in that row is blank (in this case column B):
+
+Range("b3:b20").SpecialCells(xlCellTypeBlanks).EntireRow.Delete
+
+''Delete Row Based on Cell Value
+''This will loop through a range, and delete rows if a certain cell value in that row says “delete”.
+
+
+Sub DeleteRowswithSpecificValue()
+ 
+Dim cell As Range
+ 
+For Each cell In Range("b2:b20")
+    If cell.Value = "delete" Then
+        cell.EntireRow.Delete
+    End If
+Next cell
+ 
+End Sub
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+''More Delete Row and Column Examples
+''Delete Duplicate Rows
+''This code will delete all duplicate rows in a range:
+
+
+Range("b2:c100").RemoveDuplicates Columns:=2
+''Notice we set Columns:=2. This tells VBA to check both the first two columns of data when considering if rows are duplicates. A duplicate is only found when both columns have duplicate values.
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+''Delete Last Row
+''This will delete the last used row in column B:
+
+Cells(Rows.Count, 2).End(xlUp).EntireRow.Delete
+
+Columns(2).Delete
+
+
+''''''''''''''Insert a Single Row or Column''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Rows(4).Insert
+Range("b4").EntireRow.Insert
+
+Columns(4).Insert
+Range("b4").EntireColumn.Insert
+
+
+Rows("4:6").Insert
+Range("b4:b6").EntireRow.Insert
+
+Columns("B:D").Insert
+Range("b4:d4").EntireColumn.Insert
+
+''Insert Copied Rows or Columns
+''If you’d like to insert a copied row, you would use code like this:
+
+
+Range("1:1").Copy
+Range("5:5").Insert
+
+
+''Insert Rows Based on Cell Value
+''This will loop through a range, inserting rows based on cell values:
+
+Sub InsertRowswithSpecificValue()
+ 
+Dim cell As Range
+ 
+For Each cell In Range("b2:b20")
+    If cell.Value = "insert" Then
+        cell.EntireRow.Insert
+    End If
+Next cell
+ 
+End Sub
+
+
+'''''''''''''''''''''''''''
+''Delete Rows Or Columns
+''To delete rows or columns, simply use the Delete method.
+
+Rows(1).Delete
+ 
+Range("a1").EntireRow.Delete
+ 
+Columns(1).Delete
+ 
+Range("a1").EntireColumn.Delete
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Sub Column_Width()
+    Columns("A:E").ColumnWidth = 30
+End Sub
+
+Sub RowHeight()
+    Rows("1:1").RowHeight = 30
+End Sub
+
+'''###################################################3
+'''SHEETS
+'''###################################################33
+'''To reference the last Sheet in the workbook, use Sheets.Count to get the last Index Number:
+
+Sheets(Sheets.Count).Activate
+
+Sheets("Sheet1").Select
+
+'''''''''''''''''''''''''''''''''''''''''''''''
+
+Dim ws As Worksheet
+
+Set ws = Sheets("Sheet1")
+ws.Activate
+
+
+'''''Loop Through All Sheets in Workbook
+
+Dim ws As Worksheet
+ 
+For Each ws In Worksheets
+  MsgBox ws.Name
+Next ws
+
+'''''Worksheet Protection
+
+ActiveWorkbook.Protect Password:="Password"
+ActiveWorkbook.Unprotect Password:="Password"
+
+Worksheets("Sheet1").Protect "Password"
+Worksheets("Sheet1").Unprotect "Password"
+
+Worksheets("Sheet1").Visible = xlSheetVisible
+
+Worksheets("Sheet1").Visible = xlSheetHidden
+Worksheets("Sheet1").Visible = xlSheetVeryHidden
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+DESCRIPTION CODE EXAMPLE
+Referencing and Activating Sheets
+Tab Name    Sheets("Input").Activate
+VBA Code Name   Sheet1.Activate
+Index Position  Sheets(1).Activate
+Select Sheet
+Select Sheet    Sheets("Input").Select
+Set to Variable Dim ws as Worksheet
+Set ws = ActiveSheet
+Name / Rename   ActiveSheet.Name = "NewName"
+Next Sheet  ActiveSheet.Next.Activate
+Loop Through all Sheets Dim ws as Worksheet
+
+For Each ws In Worksheets
+MsgBox ws.Name
+Next ws
+Loop Through Selected Sheets    Dim ws As Worksheet
+
+For Each ws In ActiveWindow.SelectedSheets
+MsgBox ws.Name
+Next ws
+Get ActiveSheet MsgBox ActiveSheet.Name
+Add Sheet   Sheets.Add
+Add Sheet and Name  Sheets.Add.Name = "NewSheet"
+Add Sheet With Name From Cell   Sheets.Add.Name = range("a3").value
+Add Sheet After Another Sheets.Add After:=Sheets("Input")
+Add Sheet After and Name    Sheets.Add(After:=Sheets("Input")).Name = "NewSheet"
+Add Sheet Before and Name   Sheets.Add(Before:=Sheets("Input")).Name = "NewSheet"
+Add Sheet to End of Workbook    Sheets.Add After:=Sheets(Sheets.Count)
+Add Sheet to Beginning of Workbook  Sheets.Add(Before:=Sheets(1)).Name = "FirstSheet"
+Add Sheet to Variable   Dim ws As Worksheet
+Set ws = Sheets.Add
+Copy Worksheets
+Move Sheet to End of Workbook   Sheets("Sheet1").Move After:=Sheets(Sheets.Count)
+To New Workbook Sheets("Sheet1").Copy
+Selected Sheets To New Workbook ActiveWindow.SelectedSheets.Copy
+Before Another Sheet    Sheets("Sheet1").Copy Before:=Sheets("Sheet2")
+Before First Sheet  Sheets("Sheet1").Copy Before:=Sheets(1)
+After Last Sheet    Sheets("Sheet1").Copy After:=Sheets(Sheets.Count)
+Copy and Name   Sheets("Sheet1").Copy After:=Sheets(Sheets.Count)
+ActiveSheet.Name = "LastSheet"
+Copy and Name From Cell Value   Sheets("Sheet1").Copy After:=Sheets(Sheets.Count)
+ActiveSheet.Name = Range("A1").Value
+To Another Workbook Sheets("Sheet1").Copy Before:=Workbooks("Example.xlsm").Sheets(1)
+Hide / Unhide Sheets
+Hide Sheet  Sheets("Sheet1").visible = False
+or
+Sheets("Sheet1").Visible = xlSheetHidden
+Unhide Sheet    Sheets("Sheet1").Visible = True
+or
+Sheets("Sheet1").Visible = xlSheetVisible
+Very Hide Sheet Sheets(?Sheet1?).Visible = xlSheetVeryHidden
+Delete or Clear Sheets
+Delete Sheet    Sheets("Sheet1").Delete
+Delete Sheet (Error Handling)   On Error Resume Next
+Sheets("Sheet1").Delete
+On Error GoTo 0
+Delete Sheet (No Prompt)    Application.DisplayAlerts = False
+Sheets("Sheet1").Delete
+Application.DisplayAlerts = True
+Clear Sheet Sheets("Sheet1").Cells.Clear
+Clear Sheet Contents Only   Sheets("Sheet1").Cells.ClearContents
+Clear Sheet UsedRange   Sheets("Sheet1").UsedRange.Clear
+Protect or Unprotect Sheets
+Unprotect (No Password) Sheets("Sheet1").Unprotect
+Unprotect (Password)    Sheets("Sheet1").Unprotect "Password"
+Protect (No Password)   Sheets("Sheet1").Protect
+Protect (Password)  Sheets("Sheet1").Protect "Password"
+Protect but Allow VBA Access    Sheets("Sheet1").Protect UserInterfaceOnly:=True
+Unprotect All Sheets    Dim ws As Worksheet
+
+For Each ws In Worksheets
+ws.Unprotect "password"
+Next ws
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+ActiveSheet.Name = "NewName"
+
+
+Sub Add()
+    Sheets.Add
+End Sub
+
+
+ActiveSheet.Name = "NewSheet"
+
+Sheets.Add.Name = "NewSheet"
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'Copy Sheet Before First Sheet
+Sheets("Sheet1").Copy Before:=Sheets(1)
+
+Sheets("Sheet1").Move After:=Sheets(Sheets.Count)
+
+
+'''Hide Sheet in VBA
+
+Worksheets("Sheet1").Visible = False
+
+Worksheets("Sheet1").Visible = xlSheetHidden
+Worksheets("Sheet1").Visible = xlSheetVisible
+
+''''Unhide All Sheets
+
+Sub Unhide_All_Sheets()
+    Dim ws As Worksheet
+    
+    ActiveWorkbook.Unprotect
+    For Each ws In Worksheets
+        ws.Visible = xlSheetVisible
+    Next
+End Sub
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''Delete Worksheet
+''Use the delete command to delete a worksheet.
+''
+''Delete Worksheet by Name
+
+
+Sheets("Sheet1").Delete
+Sheets(1).Delete
+
+''This code deletes the last worksheet in the workbook:
+
+Sheets(Sheets.Count).Delete
+
+''You can disable these prompts (alerts) by toggling DisplayAlerts:
+Application.DisplayAlerts = False
+Sheets("Sheet1").Delete
+Application.DisplayAlerts = True
+
+On Error Resume Next
+    Sheets("Sheet1").Delete
+On Error GoTo 0
+
+
+Sheets("Sheet1").Cells.Clear
+Sheets("Sheet1").Cells.ClearContents
+
+
+Sheets("OldSheet").Name = "NewName"
+
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''List all Worksheets in a Workbook
+
+Sub ListSheets()
+ 
+Dim ws As Worksheet
+Dim x As Integer
+ 
+x = 1
+ 
+Sheets("Sheet1").Range("A:A").Clear
+ 
+For Each ws In Worksheets
+     Sheets("Sheet1").Cells(x, 1) = ws.Name
+     x = x + 1
+Next ws
+ 
+End Sub
+
+''''''Application.Sheets.Count – Count Worksheets
+
+Public Sub CountMySheets()
+ 
+MsgBox Application.Sheets.Count
+ 
+End Sub
+
+''''''''''Create Hyperlink Index of All Worksheets in Workbook
+
+Sub ListSheets__22()
+ 
+Dim ws As Worksheet
+Dim x As Integer
+ 
+x = 1
+ 
+Sheets("Sheet1").Range("A:A").Clear
+ 
+For Each ws In Worksheets
+ 
+   Sheets("Sheet1").Cells(x, 1).Select
+   ActiveSheet.Hyperlinks.Add _
+   Anchor:=Selection, Address:="", SubAddress:= _
+   ws.Name & "!A1", TextToDisplay:=ws.Name
+   x = x + 1
+ 
+Next ws
+ 
+End Sub
+
+
+'''###############################################################################
+'''WORKBOOKS
+'''################################################################################
+
+Sub AddWB()
+ 
+Workbooks.Add
+MsgBox ActiveWorkbook.Name
+ 
+End Sub
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Dim wb As Workbook
+ 
+Workbooks.Add
+Set wb = ActiveWorkbook
+
+
+''''''''''You can also create a new Workbook and immediately save it:
+
+Workbooks.Add.SaveAs Filename:="NewWB"
+
+Workbooks("NewWB.xlsx").Activate
+
+
+'''''Create New Workbook & Add Sheets
+ActiveWorkbook.Worksheets.Add Count:=2
+
+
+Workbooks.Open "C:\VBA Folder\Sample file 1.xlsx"
+
+
+Sub OpenWorkbookToVariable()
+    Dim wb As Workbook
+    Set wb = Workbooks.Open("C:\VBA Folder\Sample file 1.xlsx")
+ 
+    wb.Save
+End Sub
+
+
+''Workbook Open File Dialog
+''You can also trigger the workbook Open File Dialog box. This allows the user to navigate to a file and open it:
+
+
+Sub OpenWorkbook()
+ 
+    Dim strFile As String
+ 
+    strFile = Application.GetOpenFilename()
+    Workbooks.Open (strFile)
+ 
+End Sub
+
+Sub OpenNewWorkbook()
+    Dim wb As Workbook
+    Set wb = Workbooks.Add
+End Sub
+
+
+Sub OpenWB()
+    Dim wb As Workbook
+    Set wb = Workbooks.Open("C:\VBA Folder\Sample file 1.xlsx", True, True)
+End Sub
+
+Workbooks.Close ("C:\VBA Folder\Sample file 1.xlsx")
+
+
+ActiveWorkbook.Close
+Workbooks.Close
+
+Workbooks(1).Close
+
+
+ActiveWorkbook.Close savechanges:=False
+ActiveWorkbook.Close savechanges:=True
+
+Sub OpenMultipleNewWorkbooks()
+    Dim arrWb(3) As Workbook
+    Dim I As Integer
+    
+    For I = 1 To 3
+        Set arrWb(I) = Workbooks.Add
+    Next I
+End Sub
+
+''''########################################################3
+''''''FILES
+''''########################################################
+
+'''Using the FileSystemObject to Get the List of Files in a Folder
+
+Sub LoopThroughFiles__()
+ 
+Dim oFSO As Object
+Dim oFolder As Object
+Dim oFile As Object
+Dim I As Integer
+ 
+Set oFSO = CreateObject("Scripting.FileSystemObject")
+ 
+Set oFolder = oFSO.GetFolder("C:\VBA Folder")
+ 
+For Each oFile In oFolder.Files
+ 
+    Cells(I + 1, 1) = oFile.Name
+ 
+    I = I + 1
+ 
+Next oFile
+ 
+End Sub
+
+'''''''Test if Workbook is Open by Workbook Name
+Sub TestByWorkbookName()
+Dim wb As Workbook
+ 
+    For Each wb In Workbooks
+        If wb.Name = "New Microsoft Excel Worksheet.xls" Then
+            MsgBox "Found it"
+            Exit Sub 'call code here, we'll just exit for now
+        End If
+    Next
+ 
+End Sub
+
+'''''''''''''''''''''''''''''''''''''''
+'''Open a File Dialog in VBA
+
+Sub open_file()
+
+Dim strFile As String
+ 
+strFile = Application.GetOpenFilename(FileFilter:="Excel files (*.xlsx*), *.xlsx*", Title:="Choose an Excel file to open", MultiSelect:=False)
+Debug.Print strFile
+
+End Sub
+
+
+''''#########################################################3
+'''''''TEXT AND STRINGS
+''''##########################################################
+Sub UsingTheLeftStringFunction()
+ 
+Dim valueOne As String
+Dim valueTwo As String
+ 
+valueOne = "AutomateExcel"
+valueTwo = Left(valueOne, 4)
+valueTwo = Right(valueOne, 4)
+
+valueOne = "AutomateExcel"
+valueTwo = Mid(valueOne, 2, 4)
+
+
+
+''Finding the Position of a Substring
+Sub UsingTheInstrStringFunction()
+ 
+Dim valueOne As String
+Dim positionofSubstring As Integer
+ 
+valueOne = "This is The Text "
+positionofSubstring = InStr(1, valueOne, "Th")
+ 
+Debug.Print positionofSubstring
+ 
+ 
+End Sub
+ 
+MsgBox valueTwo
+ 
+End Sub
+
+Sub UsingTheLTrimStringFunction()
+ 
+Dim valueOne As String
+Dim valueTwo As String
+ 
+valueOne = "         This is the website adddress https://www.automateexcel.com/"
+valueTwo = LTrim(valueOne)
+ 
+MsgBox valueOne
+MsgBox valueTwo
+ 
+End Sub
+
+Sub UsingTheRTrimStringFunction()
+ 
+Dim valueOne As String
+Dim valueTwo As String
+ 
+valueOne = "This is the website adddress https://www.automateexcel.com/               "
+valueTwo = RTrim(valueOne)
+ 
+MsgBox valueOne
+MsgBox valueTwo
+ 
+End Sub
+
+
+Sub UsingTheTrimStringFunction()
+ 
+Dim valueOne As String
+Dim valueTwo As String
+ 
+valueOne = "           This is the website adddress https://www.automateexcel.com/             "
+valueTwo = Trim(valueOne)
+ 
+MsgBox valueOne
+MsgBox valueTwo
+ 
+End Sub
+
+Sub UsingTheLCaseStringFunction()
+ 
+Dim valueOne As String
+Dim valueTwo As String
+ 
+valueOne = "THIS IS THE PRODUCT"
+valueTwo = LCase(valueOne)
+valueTwo = UCase(valueOne)
+ 
+MsgBox valueTwo
+ 
+End Sub
+
+Sub UsingTheLikeOperatorInVBA()
+ 
+Dim valueOne As String
+valueOne = "Let's view the output"
+ 
+If valueOne Like "*view*" Then
+MsgBox "There is a match, this string contains the word view"
+Else
+MsgBox "No match was found"
+End If
+ 
+End Sub
+
+Sub UsingTheLikeOperatorWithAWildcardInVBA()
+ 
+Dim valueOne As String
+valueOne = "The"
+ 
+If valueOne Like "??e" Then
+MsgBox "There is a match, a matching pattern was found"
+Else
+MsgBox "No match was found"
+End If
+ 
+End Sub
+
+
+
+Sub UsingTheReplaceStringFunction()
+ 
+Dim valueOne As String
+Dim valueTwo As String
+ 
+valueOne = "ProductABC"
+valueTwo = Replace(valueOne, "ABC", "XYZ")
+ 
+MsgBox valueTwo
+ 
+End Sub
+
+
+Sub UsingTheStrReverseStringFunction()
+ 
+Dim valueOne As String
+Dim valueTwo As String
+ 
+valueOne = "Product"
+valueTwo = StrReverse(valueOne)
+ 
+MsgBox valueTwo
+ 
+End Sub
+
+
+Sub UsingTheLenFunction()
+ 
+Dim valueOne As String
+Dim stringLength As Integer
+ 
+valueOne = "AutomateExcel"
+stringLength = Len(valueOne)
+Debug.Print stringLength
+ 
+ 
+End Sub
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Range("C1").Value = Range("A1").Value & Range("B1").Value
+
+'''''''''Using vbNewLine
+
+Sub UsingvbNewLine()
+ 
+Dim StringOne As String
+Dim StringTwo As String
+ 
+StringOne = "This is String One"
+StringTwo = "This is String Two"
+ 
+Debug.Print StringOne & vbNewLine & StringTwo
+ 
+End Sub
+
+
+'''Loop Through Each Character in a String
+Sub LoopThroughString()
+ 
+Dim Counter As Integer
+Dim MyString As String
+ 
+MyString = "AutomateExcel" 'define string
+ 
+For Counter = 1 To Len(MyString)
+    'do something to each character in string
+    'here we'll msgbox each character
+    MsgBox Mid(MyString, Counter, 1)
+Next
+ 
+End Sub
+
+
+Sub LoopThroughString2()
+ 
+Dim LookInHere As String
+Dim Counter As Integer
+Dim SplitCatcher As Variant
+ 
+'Use your own text here
+ 
+LookInHere = "I Heart AutomateExcel.com"
+ 
+SplitCatcher = Split(LookInHere, " ")
+ 
+For Counter = 0 To UBound(SplitCatcher)
+    MsgBox SplitCatcher(Counter)
+Next
+ 
+End Sub
+
+'''''''VBA Space Function
+Sub AddSpaces()
+Dim MyString As String
+ 
+MyString = "Hello" & Space(10) & "World"
+ 
+MsgBox MyString
+ 
+End Sub
+
+
+'''Using the Like Operator to Compare Two Strings
+
+Sub LikeDemo()
+ 
+Dim strName As String
+Dim blnResult As Boolean
+ 
+strName = "Mr. Michael James"
+ 
+If strName Like "Mr*" Then
+    blnResult = True
+Else
+    blnResult = False
+End If
+ 
+End Sub
+
+
+
+Pattern code
+
+Type of matching
+
+*
+
+Matches 0 or more characters
+Print
+
+Matches a single character
+#
+
+Matches a single digit
+[chars]
+
+Matches a single character from a char list
+[A-Z]
+
+Matches any uppercase character from the alphabet
+[A-Za-z]
+
+Matches any character from the alphabet
+[!chars]
+
+Matches a single character excluding a char list
+
+'''''''''''''''''''''''''''''''''''''''
+strText1 = "ABCDE"
+  
+If strText1 Like "AB?DE" Then
+    blnResult1 = True
+Else
+    blnResult1 = False
+End If
+
+''''''
+strText2 = "AB7DE"
+  
+If strText2 Like "AB#DE" Then
+    blnResult2 = True
+Else
+    blnResult2 = False
+End If
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Matching any uppercase character from the alphabet:
+
+1
+2
+3
+4
+5
+6
+7
+strText3 = "ABCDE"
+ 
+If strText3 Like "AB[A-Z]DE" Then
+    blnResult3 = True
+Else
+    blnResult3 = False
+End If
+ 
+
+''Not matching any uppercase character from the alphabet:
+
+strText4 = "AB7DE"
+ 
+If strText4 Like "AB[!A-Z]DE" Then
+    blnResult4 = True
+Else
+    blnResult4 = False
+End If
+ 
+
+''Matching any character from the alphabet (uppercase or lowercase):
+
+strText5 = "ABcDE"
+   
+If strText5 Like "AB[A-Za-z]DE" Then
+    blnResult5 = True
+Else
+    blnResult5 = False
+End If
+ 
+''Is Nothing
+''The most common use of the Is operator is to check if an object has been assigned to an object variable.
+
+''You can see how this works in the procedure below:
+
+Sub IsNothing()
+Dim ws As Worksheet
+ 
+'Set ws = ActiveSheet
+ 
+If ws Is Nothing Then
+    MsgBox "Not Assigned"
+Else
+    MsgBox "Assigned"
+End If
+ 
+End Sub
+
+'''''''''''''''''''''''''''''''''''''''''''
+'''''Using the And Logical Operator
+
+Dim intA As Integer
+Dim intB As Integer
+Dim blnResult As Boolean
+  
+intA = 5
+intB = 5
+   
+If intA = 5 And intB = 5 Then
+    blnResult = True
+Else
+    blnResult = False
+End If
+
+''''Convert String to Integer
+
+MsgBox CInt("7.55")
+MsgBox CLng("13.5")
+MsgBox CDbl("9.1819")
+
+
+''''''''Split String into Cells
+
+Sub SplitBySemicolonExample()
+    'Define variables
+    Dim MyArray() As String, MyString As String, I As Variant, n As Integer
+    
+    'Sample string with semi colon delimiters
+    MyString = "john@myco.com;jane@myco.com;bill@myco.com;james@myco.com"
+    
+    'Use Split function to divide up the component parts of the string
+    MyArray = Split(MyString, ";")
+    
+    'Clear the worksheet
+    ActiveSheet.UsedRange.Clear
+    
+    'iterate through the array
+    For n = 0 To UBound(MyArray)
+        'Place each email address into the first column of the worksheet
+        Range("A" & n + 1).Value = MyArray(n)
+    Next n
+End Sub
+
+''''################################################################################3
+''''SHAPES, CHARTS, AND OBJECTS
+''''################################################################################3
+
+Sub CreateEmbeddedChartUsingChartObject()
+ 
+Dim embeddedchart As ChartObject
+ 
+Set embeddedchart = Sheets("Sheet1").ChartObjects.Add(Left:=180, Width:=300, Top:=7, Height:=200)
+embeddedchart.Chart.SetSourceData Source:=Sheets("Sheet1").Range("A1:B4")
+ 
+End Sub
+
+
+
+Sub CreateEmbeddedChartUsingShapesAddChart()
+ 
+Dim embeddedchart As Shape
+ 
+Set embeddedchart = Sheets("Sheet1").Shapes.AddChart
+embeddedchart.Chart.SetSourceData Source:=Sheets("Sheet1").Range("A1:B4")
+ 
+End Sub
+
+
+
+Sub SpecifyAChartType()
+ 
+Dim chrt As ChartObject
+ 
+Set chrt = Sheets("Sheet1").ChartObjects.Add(Left:=180, Width:=270, Top:=7, Height:=210)
+chrt.Chart.SetSourceData Source:=Sheets("Sheet1").Range("A1:B5")
+chrt.Chart.ChartType = xlPie
+ 
+End Sub
+
+
+'''These are some of the popular chart types that are usually specified, although there are others:
+
+xlArea
+xlPie
+xlLine
+xlRadar
+xlXYScatter
+xlSurface
+xlBubble
+xlBarClustered
+xlColumnClustered
+
+Sub AddingAndSettingAChartTitle()
+ 
+ActiveChart.SetElement (msoElementChartTitleAboveChart)
+    ActiveChart.ChartTitle.Text = "The Sales of the Product"
+    
+End Sub
+
+
+Sub AddingABackgroundColorToTheChartArea()
+ 
+ActiveChart.ChartArea.Format.Fill.ForeColor.RGB = RGB(253, 242, 227)
+ 
+End Sub
+
+
+
+Sub AddingABackgroundColorToTheChartArea_1()
+ 
+ActiveChart.ChartArea.Interior.ColorIndex = 40
+ 
+End Sub
+
+
+Sub AddingABackgroundColorToThePlotArea()
+ 
+ActiveChart.PlotArea.Format.Fill.ForeColor.RGB = RGB(208, 254, 202)
+    
+End Sub
+
+''''You can add a legend using the Chart.SetElement method. The following code adds a legend to the left of the chart:
+
+Sub AddingALegend()
+ 
+ActiveChart.SetElement (msoElementLegendLeft)
+ 
+End Sub
+
+You can specify the position of the legend in the following ways:
+
+msoElementLegendLeft – displays the legend on the left side of the chart.
+msoElementLegendLeftOverlay – overlays the legend on the left side of the chart.
+msoElementLegendRight – displays the legend on the right side of the chart.
+msoElementLegendRightOverlay – overlays the legend on the right side of the chart.
+msoElementLegendBottom – displays the legend at the bottom of the chart.
+msoElementLegendTop – displays the legend at the top of the chart.
+
+
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''Creating a Pivot Table on a Sheet
+Worksheets("Sheet1").Cells(1, 1).Select
+ 
+ActiveWorkbook.PivotCaches.Create(SourceType:=xlDatabase, SourceData:= _
+
+ "Sheet1!R1C1:R21C4", Version:=xlPivotTableVersion15).CreatePivotTable _
+
+  TableDestination:="Sheet1!R2C10", TableName:="PivotTable1", DefaultVersion _
+
+  :=xlPivotTableVersion15
+ 
+  Sheets("Sheet1").Select
+  
+  
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''Creating a Pivot Table on a New Sheet
+  
+Worksheets("Sheet1").Cells(1, 1).Select
+ 
+Sheets.Add
+ 
+    ActiveWorkbook.PivotCaches.Create(SourceType:=xlDatabase, SourceData:= _
+
+ "Sheet1!R1C1:R21C4", Version:=xlPivotTableVersion15).CreatePivotTable _
+
+  TableDestination:="Sheet2!R3C1", TableName:="PivotTable1", DefaultVersion _
+
+  :=xlPivotTableVersion15
+ 
+  Sheets("Sheet2").Select
+  
+  
+''''###########################################################################################
+'''''VARIABLES
+'''################################################################
+
+
+
+##################################################################################
+1.) Dim and ReDim Statements
+
+ 
+
+''''Dim a single variable:
+
+Dim firstRowNumber As Integer
+
+ 
+
+'''''''Dim multiple variables:
+
+ 
+
+'''Incorrect method:
+
+Dim firstRowNumber, secondRowNumber, thirdRowNumber As Integer
+
+'''''It will only Dim thirdRowNumber as Integer and the other 2 variables firstRowNumber & secondRowNumber as Variant (default).
+
+ 
+
+''''''Correct methods:
+
+Dim firstRowNumber As Integer, secondRowNumber As Integer, thirdRowNumber As Integer
+
+or
+
+Dim totalRows As Integer, studentName As String, validDate As Date
+
+or
+
+Dim totalRows As Integer
+Dim studentName As String
+Dim validDate As Date
+
+2.) #################################################################################
+
+
+Dim statements can be declared at 3 basic levels:
+
+1) Procedure Level:
+
+sub Macro_1()
+
+	Dim strname as String
+
+	strname = "hi.."
+
+	msgbox strname
+
+End sub
+
+sub Macro_2()
+
+	''''return blank 
+	msgbox strname
+
+End Sub
+
+
+2) Module Level:
+
+Private strname as String
+sub Macro_1()
+
+	
+
+	strname = "hi.."
+
+	msgbox strname
+
+End sub
+
+sub Macro_2()
+
+
+	'''return values
+	msgbox strname
+
+End Sub
+
+
+3) Project Level:
+
+'''defined in module 3
+Public strname as String
+sub Macro_1()
+
+	
+
+	strname = "hi.."
+
+	msgbox strname
+
+End sub
+
+''''defined in module 4
+sub Macro_2()
+
+
+	'''return values
+	msgbox strname
+
+End Sub
+
+'''''''###################### Static Statement:##########################################################################
+
+Only Procedure-level variables can be declared Static. Variables declared with the Static statement retain their values while the code is running and thereafter, until your project is reset or the document is closed. This means the variable is not destroyed and retains its value between multiple calls to the procedure. Normally, a local variable in a procedure ceases to exist as soon as the procedure terminates. A static variable remains in existence and retains its most recent value. The next time your code calls the procedure, the variable is not reinitialized, and it still holds the latest value you assigned to it. You can use Static only on local variables. Example:
+'''' 
+
+Sub Counter1()
+
+Dim counter As Integer
+counter = counter + 1
+MsgBox counter
+
+End Sub
+
+ 
+
+Sub Counter2()
+
+Static counter As Integer
+counter = counter + 1
+MsgBox counter
+
+End Sub
+
+ 
+
+Each time you run the procedure Counter1, it will display the value 1. Each time you run the procedure Counter 2, the displayed value will be incremented by 1 ie. it will display 1, then 2, then 3, and so on.
+
+Sub DeclaringAConstant()
+ 
+	Const NumberofDays = 1
+	MsgBox NumberofDays
+ 
+End Sub
+
+''''''''############################################
+
+
+
+''''''''''''Example using Type-Declaration Character:   Dim studentName$   instead of   Dim studentName As String
+
+
+
+'''''''''Variable Data Types
+
+ 
+
+A Type Declaration Character is a character appended to a variable name indicating the variable's data type. While declaring a variable using the Dim statement, for certain data types only (see below), you can use "type-declaration character" instead of the "As" clause. However this is not commonly used.
+
+ 
+
+Data Type	Type-Declaration Character/Suffixes
+Integer	%
+Long	&
+Single	!
+Double	#
+String	$
+Currency	@
+ 
+
+Example using Type-Declaration Character:   Dim studentName$   instead of   Dim studentName As String
+
+ 
+
+ 
+
+Numeric Data Types (which consist of numbers and can be computed mathematically using standard artihmetic operators) - 7 types:
+
+Byte, Integer and Long data types for calculations involving round figures (ie. integers).
+
+Single and Double data types (also called floating-point data types) for high precision (allow extremely small or large numbers) calculations.
+
+Currency data type for monetary calculations and accuracy.
+
+Decimal data type for calculations which involve a large number of digits and where accuracy is important.
+
+ 
+
+ 
+
+Non-Numeric Data Types - 5 types:
+
+String data type for text values.
+
+Date data type for dates.
+
+Boolean data types which take only one of two values: True or False.
+
+Object data type for any Object reference.
+
+Variant data type to hold any type of data. It is the default VBA data type - if you do not declare a variable.
+###################################################################################################
+
+
+Byte	1-byte
+Integer	2-bytes
+Long	4-bytes
+Single	4-bytes
+Double	8-bytes 
+Currency	8-bytes
+ Decimal	 12-bytes
+ String (variable-length)	10
+ Date	8-bytes
+ Boolean	2-bytes
+ Object	4-bytes
+ Variant (numeric)	16
+ 
+ ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+ 
+ '''''##########################################################################3
+ '''ARRAYS
+ ''''###########################################################################
+ 
+Sub demoArray1()
+
+ 
+
+Dim myarray() As String
+ReDim myarray(3) As String
+
+ 
+
+myarray(1) = "Mon"
+myarray(2) = "Tue"
+myarray(3) = "Wed"
+
+MsgBox myarray(1) & ", " & myarray(2) & ", " & myarray(3)
+
+ 
+
+End Sub
+
+Sub demoArray2()
+
+
+Dim myarray() As String
+ReDim myarray(3) As String
+
+myarray(1) = "Mon"
+myarray(2) = "Tue"
+myarray(3) = "Wed"
+
+ReDim myarray(4) As String
+
+myarray(4) = "Thurs"
+
+MsgBox myarray(1) & ", " & myarray(2) & ", " & myarray(3) & ", " & myarray(4)
+
+ 
+
+End Sub
+
+Sub demoArray3()
+
+
+Dim myarray() As String
+ReDim myarray(3) As String
+
+myarray(1) = "Mon"
+myarray(2) = "Tue"
+myarray(3) = "Wed"
+
+ReDim Preserve myarray(4) As String
+
+myarray(4) = "Thurs"
+
+MsgBox myarray(1) & ", " & myarray(2) & ", " & myarray(3) & ", " & myarray(4)
+
+
+End Sub
+
+
+Sub demoarray4()
+
+    Dim sheet_name_array As Variant
+    Dim old_data_array As Variant
+    
+    sheet_name_array = Array("Ideal Ranking by MFS", "Considered rank by MFS", "Familiar Ranking by MFS", "Application Ranking by MFS")
+    old_data_array = Array("Data - % & rankings 2018", "Considered - % and ranks 2018", "FamiliarData -% & rankings 2018", "Application - % & rankings 2018")
+
+
+    For y = LBound(sheet_name_array) To UBound(sheet_name_array) '''UBound(sheet_name_array)
+    
+        Debug.Print sheet_name_array(y)
+    
+    
+    Next
+
+End Sub
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+'''######################################################################################################
+'''FUNCTIONS
+'''##################################################################################################
+
+
+
+Function Area1(x As Double, y As Double) As Double
+
+    Area1 = x * y
+
+End Function
+
+
+Sub call_function()
+
+
+    Dim z As Double
+    
+    z = Area1(3, 5) + 2
+    
+    MsgBox z
+
+End Sub
+
+'''''''''''''''''''''''''''''''''''''''''''''
+
+Sub DeclaringAVariableAsADate()
+ 
+	Dim dateOne As Date
+	Dim dateTwo As Date
+	 
+	 
+	dateOne = #1/1/2019#
+	dateTwo = "1/2/2019"
+	 
+	Range("A1").Value = dateOne
+	Range("A2").Value = dateTwo
+ 
+End Sub
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Sub UsingTheDateFunction()
+ 
+	Dim theDate As Date
+	theDate = Date()
+	 
+	Debug.Print theDate
+ 
+End Sub
+''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Sub UsingTheNowFunction()
+ 
+	Dim theDate As Date
+	theDate = Now()
+	 
+	Debug.Print theDate
+ 
+End Sub
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+Sub UsingTheTimeFunction()
+ 
+	Dim theTime As Date
+	theTime = Time()
+	 
+	Debug.Print theTime
+ 
+End Sub
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+“d” – day
+“ww” – week
+“w” – weekday
+“m” – month
+“q” – quarter
+“yyyy” – year
+“y” – day of the year
+“h” – hour
+“n” – minute
+“s” – second
+
+''''''''''''''''''''''''''''''''''''''''''''''
+Sub UsingTheDateAddFunction()
+ 
+	Dim laterDate As Date
+	 
+	laterDate = DateAdd("m", 10, "11/12/2019")
+	 
+	Debug.Print laterDate
+ 
+End Sub
+
+
+''''''''''''''''''''''''''''''''''''''''''
+Sub UsingTheDatePartFunction()
+ 
+	Dim thePartOfTheDate As Integer
+	 
+	thePartOfTheDate = DatePart("yyyy", "12/12/2009")
+	 
+	Debug.Print thePartOfTheDate
+ 
+End Sub
+
+
+
+Sub UsingTheDateSerialFunction()
+ 
+	Dim theDate As Date
+	 
+	theDate = DateSerial(2010, 11, 10)
+	 
+	Debug.Print theDate
+ 
+End Sub
+
+Sub UsingTheDateValueFunction()
+ 
+	Dim theDate As Date
+	 
+	theDate = DateValue("October, 29, 2010")
+	 
+	Debug.Print theDate
+ 
+End Sub
+
+
+Sub UsingTheDayFunction()
+ 
+	Dim theDay As Integer
+	 
+	theDay = Day("10/12/2010")
+	 
+	Debug.Print theDay
+ 
+End Sub
+
+Sub UsingTheHourFunction()
+ 
+	Dim theHour As Integer
+	 
+	theHour = Hour("2:14:17 AM")
+	 
+	Debug.Print theHour
+ 
+End Sub
+
+
+Sub UsingTheMonthFunction()
+ 
+	Dim theMonth As Integer
+ 
+	theMonth = Month("11/18/2010")
+	Debug.Print theMonth
+ 
+End Sub
+
+Sub UsingTheMonthNameFunction()
+ 
+	Dim theMonthName As String
+	 
+	theMonthName = MonthName(12, True)
+	Debug.Print theMonthName
+ 
+End Sub
+
+Sub ComparingDates()
+ 
+	Dim dateOne As Date
+	Dim dateTwo As Date
+	 
+	dateOne = "10/10/2010"
+	dateTwo = "11/11/2010"
+	 
+	If dateOne > dateTwo Then
+	Debug.Print "dateOne is the later date"
+	 
+	ElseIf dateOne = dateTwo Then
+	Debug.Print "The two dates are equal"
+	 
+	Else
+	Debug.Print "dateTwo is the later date"
+	 
+	End If
+End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

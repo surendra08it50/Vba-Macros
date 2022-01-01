@@ -1,0 +1,80 @@
+
+Sub SortDataWithMOF()
+
+    Dim sh, sh2, sh3, sh4 As Worksheet
+    Set sh = Application.ThisWorkbook.Sheets("Sheet1")
+    Set sh2 = Application.ThisWorkbook.Sheets("RG1")
+    Set sh3 = Application.ThisWorkbook.Sheets("RG2")
+    Set sh4 = Application.ThisWorkbook.Sheets("RG3")
+    
+    Dim rcell As Range
+    Dim range1, range2 As Range
+    Dim counter As Integer
+    
+ Dim x, y, z, k
+ 
+counter = 7
+x = Cells(2, 13).Value ''' column no for Bus, eng...
+
+With sh
+    Set range1 = .Range(.Cells(7, 2), .Cells(.Range("B7").End(xlDown).Row, 6))
+End With
+
+
+For x = 4 To 6
+    sh.Range(range1.Address).Sort Key1:=Cells(7, x), Order1:=xlAscending, Header:=xlNo
+    
+    For y = 7 To 11
+        sh.Range("B7:B11").Copy
+        sh.Range("M" & counter).PasteSpecial Paste:=xlPasteValues
+        Cells(y + counter - 7, 14).Value = Application.Match(Cells(y + counter - 7, 13).Value, Worksheets(x - 2).Rows(6), 0)
+
+   Next
+   
+   counter = counter + 6
+Next
+
+'''''''''''''''''''''''''''''''''''''''''''''
+With sh2
+    Set range2 = .Range(.Cells(7, 2), .Cells(.Range("B7").End(xlDown).Row, .Cells(6, Columns.Count).End(xlToLeft).Column))
+End With
+
+
+    counter = 7
+    For Each rcell In Range("N7:N11")
+        With sh2
+            .Range(range2.Address).Sort Key1:=.Cells(6, rcell), Order1:=xlAscending, Header:=xlNo
+            .Range("B7:B11").Copy
+        End With
+        sh.Range("O" & counter).PasteSpecial Paste:=xlPasteValues, Transpose:=True
+        counter = counter + 1
+    Next
+    
+    counter = 13
+    For Each rcell In Range("N13:N17")
+        With sh3
+            .Range(range2.Address).Sort Key1:=.Cells(6, rcell), Order1:=xlAscending, Header:=xlNo
+            .Range("B7:B11").Copy
+        End With
+        sh.Range("O" & counter).PasteSpecial Paste:=xlPasteValues, Transpose:=True
+        counter = counter + 1
+    Next
+    
+        counter = 19
+    For Each rcell In Range("N19:N23")
+        With sh4
+            .Range(range2.Address).Sort Key1:=.Cells(6, rcell), Order1:=xlAscending, Header:=xlNo
+            .Range("B7:B11").Copy
+        End With
+        sh.Range("O" & counter).PasteSpecial Paste:=xlPasteValues, Transpose:=True
+        counter = counter + 1
+    Next
+    
+    sh.Cells(7, 13).Activate
+    
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+
+End Sub
+

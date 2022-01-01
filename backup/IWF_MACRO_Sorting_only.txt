@@ -1,0 +1,393 @@
+
+Sub check3()
+
+    Dim sh As Worksheet
+    Dim sheetname, workbookname As String
+    Dim sheet_name(7) As String
+    Dim mypath As String
+    Application.DisplayAlerts = False
+    
+    workbookname = Application.ThisWorkbook.Worksheets("Sheet1").Range("F3").Value
+    mypath = ActiveWorkbook.Path
+    Workbooks.Open (mypath & "\" & workbookname)
+
+    sheet_name(1) = "Ideal Ranking by MFS"
+    sheet_name(2) = "Ideal ranking by Gender by MFS"
+    sheet_name(3) = "Female Ideal Ranking by MFS"
+    sheet_name(4) = "Male Ideal Ranking by MFS"
+    sheet_name(5) = "Familiar Ranking by MFS"
+    sheet_name(6) = "Application Ranking by MFS"
+    sheet_name(7) = "Considered rank by MFS"
+
+''''''''''''' calculate max no of employer''''''''''''''''''''''
+    Dim max_emp, emp_no As Integer
+    max_emp = 0
+    emp_no = 0
+    Set sh5 = Application.Workbooks(workbookname).Worksheets("Ideal Ranking by MFS")
+    sh5.Activate
+    lCol_max = Cells(2, Columns.Count).End(xlToLeft).Column
+        For i = 1 To lCol_max
+            If Cells(2, i) = "Employer" Then
+                    With Columns(i)
+                        .Find(what:="RANKING SORTED BY DIFFERENCE", after:=.Cells(4, 1), LookIn:=xlFormulas).Select  ''' first non blank cell in the range
+                        fnonblank_max = Application.Selection.Row
+                    End With
+                    max_emp = Application.WorksheetFunction.CountA(Range(Cells(4, i), Cells(fnonblank_max, i))) - 1
+            End If
+            
+            If max_emp > emp_no Then
+                emp_no = max_emp
+            End If
+            
+        Next
+             Debug.Print emp_no
+    
+'    ''''''''''''''''''''''''''''''''''''''''
+For h = 1 To 7
+    
+''''''''''''''''convert formula into value''''''''''''''''''
+    Set sh = Application.Workbooks(workbookname).Worksheets(sheet_name(h))
+    sh.UsedRange.Value = sh.UsedRange.Value
+    sh.Activate
+ 
+    On Error Resume Next
+
+    Dim employer(100) As Integer
+    Dim industry(100) As Integer
+    Dim range_mfos(20) As Range
+    Dim range_mfos_2(20) As Range
+    Dim range_for_hyphen_delete_1(20) As Range
+    Dim range_for_hyphen_delete_2(20) As Range
+    Dim range_2019_blank_delete_1(20) As Range
+    Dim range_2019_blank_delete_2(20) As Range
+    Dim k, m As Integer
+    k = 0
+    m = 0
+    Dim lRow As Long
+    Dim lCol As Long
+    Dim Range_MFS1, Range_MFS2 As Range
+    Dim employer_col, industry_col, fnonblank_Employer As Integer
+''''    emp_no = Application.ThisWorkbook.Worksheets("Sheet1").Range("F4").Value
+    Dim First_Zero, First_hyphen, Last_hyphen As Integer
+''''''''''''''''''''''''''''''''
+    If (sheet_name(h) = "Ideal ranking by Gender by MFS") Then
+        Range("A1").EntireRow.Insert
+     End If
+
+'*************************************************************
+'''''''''''''''''Remove blank Rows'''''''''''''''''''''''''''''''''
+   
+    remove_row_start = emp_no + 4
+    remove_row_end = emp_no + 4
+
+    With Columns("A")
+        .Find(what:="*", after:=.Cells(remove_row_start, 1), LookIn:=xlFormulas).Select  ''' first non blank cell in the range
+        fnonblank = Application.Selection.Row
+        remove_row_end = fnonblank - 2
+    End With
+
+    remove_row_start_2 = (fnonblank + 6) + emp_no + 1
+    remove_row_end_2 = remove_row_start_2 + emp_no + 1
+    
+    If (sheet_name(h) = "Ideal Ranking by MFS" Or sheet_name(h) = "Familiar Ranking by MFS" Or sheet_name(h) = "Application Ranking by MFS" Or sheet_name(h) = "Considered rank by MFS") Then
+        Rows(remove_row_start_2 & ":" & remove_row_end_2 + emp_no).EntireRow.Delete ''Remove the blank rows from 2nd table
+    End If
+
+    If (sheet_name(h) = "Ideal ranking by Gender by MFS" Or sheet_name(h) = "Female Ideal Ranking by MFS" Or sheet_name(h) = "Male Ideal Ranking by MFS") Then
+        Rows(remove_row_start & ":" & emp_no * 3 + 1).EntireRow.Delete ''Remove the blank rows from 1st table
+    Else
+        Rows(remove_row_start & ":" & remove_row_end).EntireRow.Delete    ''Remove the blank rows from 1st table
+    End If
+
+        
+''**********************************************************
+    'Find the last non-blank cell in row 2
+    lCol = Cells(2, Columns.Count).End(xlToLeft).Column
+    For i = 1 To lCol
+        If Cells(2, i) = "Employer" Then
+           k = k + 1
+            employer(k) = i
+        ElseIf (Cells(2, i) = "Industry") Then
+             m = m + 1
+           industry(m) = i
+        End If
+    Next
+
+    For i = 1 To 7
+    
+                employer_col = employer(i)
+                industry_col = industry(i)
+                
+                    With Columns(employer_col)
+                        .Find(what:="RANKING SORTED BY DIFFERENCE", after:=.Cells(employer_col, 1), LookIn:=xlFormulas).Select  ''' first non blank cell in the range
+                        fnonblank = Application.Selection.Row
+                    End With
+                    
+                    With Columns(employer_col)
+                        .Find(what:="Employer", after:=.Cells(fnonblank, 1), LookIn:=xlFormulas).Select  ''' first non blank cell in the range
+                        fnonblank_Employer = Application.Selection.Row
+                    End With
+                    
+                   On Error Resume Next
+                   
+                    With Columns(employer_col)
+                        .Find(what:="0", after:=.Cells(fnonblank_Employer, 1), LookIn:=xlFormulas).Select ''' first non blank cell in the range
+                        fnonblank_Zero = Application.Selection.Row
+                    End With
+                    
+                    With Columns(employer_col)
+                        .Find(what:="", after:=.Cells(fnonblank_Employer, 1), LookIn:=xlFormulas).Select ''' first last blank cell in the range
+                        blank_last = Application.Selection.Row
+                    End With
+                    
+                    With Columns(employer_col)
+                        .Find(what:="0", after:=.Cells(3, 1), LookIn:=xlFormulas).Select  ''' first non blank cell in the range
+                        First_Zero = Application.Selection.Row
+                    End With
+                                                              
+                    firstblank = Range(Cells(4, employer_col), Cells(4, employer_col)).End(xlDown).Row + 1
+                    
+            '''Range for '-' and '0' deletetion
+            
+                If (sheet_name(h) = "Female Ideal Ranking by MFS" Or sheet_name(h) = "Male Ideal Ranking by MFS" Or sheet_name(h) = "Ideal ranking by Gender by MFS") Then
+                    Set range_for_hyphen_delete_1(i) = Range(Cells(First_Zero, employer_col), Cells(emp_no + 8, industry_col))
+                Else
+                    Set range_for_hyphen_delete_1(i) = Range(Cells(firstblank, employer_col), Cells(fnonblank, industry_col))
+                 End If
+                 
+                    Set range_for_hyphen_delete_2(i) = Range(Cells(fnonblank_Zero, employer_col), Cells(blank_last, industry_col))
+                    
+            '''Range for Top tables
+                Set range_mfos(i) = Range(Cells(4, employer_col), Cells(emp_no + 3, industry_col))
+                
+            
+            '''Range for Bottom tables
+                Set range_mfos_2(i) = Range(Cells(fnonblank_Employer + 2, employer_col), Cells(fnonblank_Employer + 2 + emp_no, industry_col))
+            
+            ''''Removing '-' and '0' from Top table
+            
+            Range(range_for_hyphen_delete_1(i).Address).Replace "-", ""
+            Range(range_for_hyphen_delete_1(i).Address).Replace "0", ""
+            
+            ''''Removing '-' and '0' from second/Bottom table
+            
+            If (sheet_name(h) = "Ideal Ranking by MFS" Or sheet_name(h) = "Familiar Ranking by MFS" Or sheet_name(h) = "Application Ranking by MFS" Or sheet_name(h) = "Considered rank by MFS") Then
+                Range(range_for_hyphen_delete_2(i).Address).Replace "-", ""
+                Range(range_for_hyphen_delete_2(i).Address).Replace "0", ""
+            End If
+            
+            ''''Sorting''second table''''''''''''''''''''''''''''''''
+                
+            If (sheet_name(h) = "Ideal Ranking by MFS" Or sheet_name(h) = "Familiar Ranking by MFS" Or sheet_name(h) = "Application Ranking by MFS" Or sheet_name(h) = "Considered rank by MFS") Then
+                range_mfos_2(i).Sort Key1:=Cells(fnonblank_Employer, employer_col + 2), Order1:=xlAscending, Header:=xlNo '''''''first sort by rank
+                range_mfos_2(i).Sort Key1:=Cells(fnonblank_Employer, employer_col + 6), Order1:=xlAscending, Header:=xlNo  '''''then sort by rank difference
+            End If
+            
+            ''''Sorting''First table''''''''''''''''''''''''''''''''
+            
+            If (sheet_name(h) = "Ideal ranking by Gender by MFS") Then
+                range_mfos(i).Sort Key1:=Cells(3, employer_col + 3), Order1:=xlAscending, Header:=xlNo
+            Else
+                range_mfos(i).Sort Key1:=Cells(3, employer_col + 2), Order1:=xlAscending, Header:=xlNo
+            End If
+    
+    Next
+
+    If (sheet_name(h) = "Ideal ranking by Gender by MFS") Then
+        Range("A1").EntireRow.Delete
+    End If
+
+Next
+
+' ''*****************************************************************************************
+' ''******************** Fill values in Funnel sheet ****************************************
+' ''*****************************************************************************************
+
+
+    Dim sh2, sh3, sh4 As Worksheet
+    Dim MFOS_name() As String
+    Dim Background_Text(5) As String
+    Dim mfos_count As Integer
+
+    Set sh = Application.ThisWorkbook.Worksheets("Sheet2")
+    Set sh2 = Application.Workbooks(workbookname).Worksheets("Recruitment funnel")
+    Set sh3 = Application.Workbooks(workbookname).Worksheets("Definitions")
+    Set sh4 = Application.Workbooks(workbookname).Worksheets("Background Variables")
+
+      ReDim Preserve MFOS_name(sh3.Range("B2").End(xlDown).Row - 1)
+
+
+    For t = 1 To UBound(MFOS_name)
+        MFOS_name(t) = sh3.Range("B" & t + 1).Value
+
+    Next
+
+    Dim r As Integer
+    r = 0
+    For j = 4 To sh.Cells(1, Columns.Count).End(xlToLeft).Column
+
+        sh.Range("B7").AutoFilter Field:=j, Criteria1:="<>"
+        sh.Range("B2:B" & sh.Range("B2").End(xlDown).Row).Copy
+        sh2.Range("Q2").Offset(ColumnOffset:=r).PasteSpecial Paste:=xlPasteValues
+        sh.AutoFilterMode = False
+        r = r + 18
+    Next
+
+''''**********************************************************
+'''******** Working on Background Variables SHEET *****************
+'''**********************************************************
+
+    Dim mfs_name As String
+    Dim mfs_no() As Integer
+    Dim mfs_no_2(5) As Integer
+    Dim First_blank, First_nonblank, First_blank_2, First_nonblank_2, Hyphen_no As Integer
+
+      Background_Text(1) = "main field of study?"
+      Background_Text(2) = "do you attend?"
+      Background_Text(3) = "are currently pursuing?"
+      Background_Text(4) = "first employment after graduation?"
+      Background_Text(5) = "Age ("
+
+    ReDim Preserve mfs_no(UBound(MFOS_name))
+
+  '''''''''''''''''''''''''Deleting rows with blank data''''''''''''''''''''''''''''
+
+    sh4.Activate
+    For k = 1 To UBound(MFOS_name)
+        With sh4.Columns("A")
+            .Find(what:=MFOS_name(k), after:=.Cells(1, 1), LookIn:=xlFormulas).Select  '''
+            mfs_no(k) = Application.Selection.Row
+        End With
+
+            First_blank = sh4.Range("B" & (mfs_no(k) + 1)).End(xlDown).Row + 1
+
+        With sh4.Columns("B")
+            .Find(what:="*", after:=.Cells(First_blank, 1), LookIn:=xlFormulas).Select  '''
+            First_nonblank = Application.Selection.Row
+        End With
+
+        ''''''''''Deleting blank rows
+           Rows(First_blank & ":" & First_nonblank - 2).EntireRow.Delete
+    Next
+
+    For k = 1 To UBound(Background_Text) - 1
+        With sh4.Columns("A")
+            .Find(what:=Background_Text(k), after:=.Cells(1, 1), LookIn:=xlFormulas).Select  '''
+            mfs_no_2(k) = Application.Selection.Row
+        End With
+
+            First_blank_2 = sh4.Range("B" & (mfs_no_2(k) + 1)).End(xlDown).Row + 1
+
+        With sh4.Columns("B")
+            .Find(what:="*", after:=.Cells(First_blank_2, 1), LookIn:=xlFormulas).Select  '''
+            First_nonblank_2 = Application.Selection.Row
+        End With
+
+        ''''''''''Deleting blank rows
+          Rows(First_blank_2 & ":" & First_nonblank_2 - 2).EntireRow.Delete
+    Next
+
+  '''''Deleting rows with blank data in 2019
+    Set Rng = Range("A1").CurrentRegion
+    Rng.AutoFilter Field:=3, Criteria1:="-"
+    Rng.Offset(1, 0).SpecialCells(xlCellTypeVisible).EntireRow.Delete
+    sh4.AutoFilterMode = False
+
+'''''''''''''''''''''''  Sorting   ''''''''''''''''''''''''''''''''''
+
+For k = 1 To UBound(MFOS_name)
+        With sh4.Columns("A")
+            .Find(what:=MFOS_name(k), after:=.Cells(1, 1), LookIn:=xlFormulas).Select  '''
+            mfs_no(k) = Application.Selection.Row
+        End With
+
+            First_blank = sh4.Range("B" & (mfs_no(k) + 1)).End(xlDown).Row + 1
+
+        With sh4.Columns("B")
+            .Find(what:="*", after:=.Cells(First_blank, 1), LookIn:=xlFormulas).Select  '''
+            First_nonblank = Application.Selection.Row
+        End With
+
+            ''''''Sorting
+            Range("B" & mfs_no(k) + 1 & ":" & "E" & First_nonblank - 3).Sort Key1:=Cells(mfs_no(k), 5), Order1:=xlAscending, Header:=xlNo
+Next
+
+    For k = 1 To UBound(Background_Text) - 1
+        With sh4.Columns("A")
+            .Find(what:=Background_Text(k), after:=.Cells(1, 1), LookIn:=xlFormulas).Select  '''
+            mfs_no_2(k) = Application.Selection.Row
+        End With
+
+            First_blank_2 = sh4.Range("B" & (mfs_no_2(k) + 1)).End(xlDown).Row + 1
+
+        With sh4.Columns("B")
+            .Find(what:="*", after:=.Cells(First_blank_2, 1), LookIn:=xlFormulas).Select  '''
+            First_nonblank_2 = Application.Selection.Row
+        End With
+
+     ''''''Sorting
+        If (k = 2 Or k = 3) Then
+            Range("B" & mfs_no_2(k) + 1 & ":" & "E" & First_nonblank_2 - 3).Sort Key1:=Cells(mfs_no_2(k), 5), Order1:=xlAscending, Header:=xlNo
+        ElseIf (k = 4) Then
+            Range("B" & mfs_no_2(k) + 1 & ":" & "E" & First_nonblank_2 - 3).Sort Key1:=Cells(mfs_no_2(k), 5), Order1:=xlDescending, Header:=xlNo
+        End If
+
+      Next
+
+
+
+
+'''**************************************************************************************************************************************
+'''***************** PIVOT tables update sheet*********************************************************************************************************************
+''''**********************************************************
+'
+'    Set sh = Application.Workbooks(workbookname).Worksheets("MFOS breakdown")
+'    Set sh2 = Application.Workbooks(workbookname).Worksheets("Pivot data")
+'
+'        Dim Data_Sheet As Worksheet
+'        Dim Pivot_Sheet As Worksheet
+'        Dim StartPoint As Range
+'        Dim DataRange As Range
+'        Dim DataRange_2 As Range
+'        Dim PivotName As String
+'        Dim NewRange As String
+'        Dim LastCol As Long
+'        Dim lastRow As Long
+'
+'        'Set Pivot Table & Source Worksheet
+'        Set Data_Sheet = Application.Workbooks(workbookname).Worksheets("Pivot data")
+'
+'       '''''' Set Pivot_Sheet = Application.Workbooks(workbookname).Worksheets("Trends - MFS 6")
+'
+'        'Enter in Pivot Table Name
+'        PivotName = "PivotTable1"
+'        'Defining Staring Point & Dynamic Range
+'        Data_Sheet.Activate
+'        Set StartPoint = Data_Sheet.Range("A1")
+'        LastCol = StartPoint.End(xlToRight).Column
+'        DownCell = StartPoint.End(xlDown).Row
+'        Set DataRange = Data_Sheet.Range(StartPoint, Cells(DownCell, LastCol))
+'
+'        Set DataRange_2 = Data_Sheet.Range(Cells(2, 4), Cells(DownCell, LastCol))
+'        NewRange = Data_Sheet.Name & "!" & DataRange.Address(ReferenceStyle:=xlR1C1)
+'        Data_Sheet.Range(DataRange_2.Address).Replace "-", ""
+'
+''''        'Change Pivot Table Data Source Range Address
+'For w = 1 To 7
+'        Set Pivot_Sheet = Application.Workbooks(workbookname).Worksheets("Trends - MFS " & w)
+'        Pivot_Sheet.PivotTables(PivotName). _
+'        ChangePivotCache ActiveWorkbook. _
+'        PivotCaches.Create(SourceType:=xlDatabase, SourceData:=NewRange)
+'
+'        'Ensure Pivot Table is Refreshed
+'        Pivot_Sheet.PivotTables(PivotName).RefreshTable
+'
+'        'Complete Message
+'        Pivot_Sheet.Activate
+'        'MsgBox "Your Pivot Table is now updated."
+'Next
+
+MsgBox ("Done")
+    
+End Sub
+

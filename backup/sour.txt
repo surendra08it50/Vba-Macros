@@ -1,0 +1,67 @@
+Sub macro_sourabh()
+
+    Dim workbookname, workbookname2, workbookname3, text_1, market As String
+    Dim wkb, wb1, wb2, wb3 As Workbook
+    Dim shname, sh, sh2, sh3, sh4, sh5, sh6 As Worksheet
+    Dim lCol, lRow, firstblank1, sheet_number, counter, week_no, type_no As Integer
+    Dim mypath As String
+    Dim lRow_sheet As Long
+    Dim OWB As Excel.Workbook
+    Set OWB = Workbooks.Add
+    
+    mypath = Application.Workbooks("Macro_copy - 2.xlsm").Path
+
+    workbookname1 = Application.ThisWorkbook.Worksheets("Sheet1").Range("F3").Value
+    Set sh = Application.ThisWorkbook.Worksheets("Sheet1")
+
+    OWB.SaveAs mypath & "\" & "Output.xlsx"
+    
+    Set wb1 = Application.Workbooks.Open(mypath & "\" & workbookname1)
+    Set sh2 = OWB.Worksheets("Sheet1")
+    Set sh3 = Application.Workbooks(workbookname1).Worksheets("toc")
+    
+    sh2.Range("A1").Value = "market"
+    sh2.Range("B1").Value = "week"
+    sh2.Range("C1").Value = "type"
+    sh2.Range("D1").Value = "mfos"
+    sh2.Range("E1").Value = "year"
+    sh2.Range("F1").Value = "unweighted count"
+
+    lRow_sheet = 0
+    type_no = 0
+
+    lRow_toc = sh3.Cells(Rows.Count, 1).End(xlUp).Row   ''''find number of sheets
+
+    For j = 0 To lRow_toc - 2
+
+        Set sh1 = wb1.Worksheets("" & j)
+        lRow = sh1.Cells(Rows.Count, 1).End(xlUp).Row     '''last non blank row in a particular sheet
+        type_no = 0
+
+        For i = 2 To lRow
+
+            market = Right(sh1.Range("Q1"), 2)
+            week_no = sh1.Range("A" & i).Value
+
+            sh1.Range("B1:N1").Copy
+            sh2.Range("C" & 2 + type_no + lRow_sheet).PasteSpecial Paste:=xlPasteValues, Transpose:=True
+            Application.CutCopyMode = False
+
+            sh1.Range(sh1.Cells(i, "B"), sh1.Cells(i, "N")).Copy
+            sh2.Range("F" & 2 + type_no + lRow_sheet).PasteSpecial Paste:=xlPasteValues, Transpose:=True
+            Application.CutCopyMode = False
+
+            sh2.Range(sh2.Cells(2 + type_no + lRow_sheet, "A"), sh2.Cells(13 + type_no + lRow_sheet + 1, "A")).Value = market
+            sh2.Range(sh2.Cells(2 + type_no + lRow_sheet, "B"), sh2.Cells(13 + type_no + lRow_sheet + 1, "B")).Value = week_no
+            sh2.Range(sh2.Cells(2 + type_no + lRow_sheet, "E"), sh2.Cells(13 + type_no + lRow_sheet + 1, "E")).Value = sh1.Range("O" & i).Value
+
+
+            type_no = type_no + 13
+        Next
+         OWB.Save
+
+        lRow_sheet = sh2.Cells(Rows.Count, 1).End(xlUp).Row - 1
+
+    Next
+
+End Sub
